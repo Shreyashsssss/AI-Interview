@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
-import { Calendar, Users, Star, Clock, CheckCircle, Book, TrendingUp, MessageSquare, User, ChevronRight, XCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Users, Star, Clock, CheckCircle, Book, TrendingUp, MessageSquare, User, ChevronRight, XCircle, AlertCircle, Video } from 'lucide-react';
 
 interface Booking {
   id: string;
@@ -21,6 +21,8 @@ interface Booking {
   date: string;
   time: string;
   status: 'pending' | 'approved' | 'rejected' | 'confirmed';
+  meetingLink?: string;
+  meetingRoom?: string;
   createdAt: string;
   skills: string[];
   aiScore: number;
@@ -95,12 +97,36 @@ export default function ExpertDashboardPage() {
 
   const selectedBooking = allBookings.find(b => b.id === selectedStudentId);
 
+  const generateMeetingRoom = (bookingId: string) => {
+    const sanitized = bookingId.replace(/[^a-zA-Z0-9]/g, '');
+    const timestamp = Date.now().toString(36);
+    return `PlaceAI-Interview-${sanitized}-${timestamp}`;
+  };
+
+  const buildMeetingUrl = (booking: Booking, roomName: string) => {
+    const params = new URLSearchParams({
+      room: roomName,
+      bookingId: booking.id,
+      expertName: booking.expertName,
+      expertCompany: booking.expertCompany,
+      studentName: booking.studentName,
+      role: booking.role,
+      date: booking.date,
+      time: booking.time,
+    });
+    return `/interview/room?${params.toString()}`;
+  };
+
   const handleApprove = (bookingId: string) => {
+    // Generate a unique meeting room for this interview
+    const meetingRoom = generateMeetingRoom(bookingId);
+    const meetingLink = `https://meet.jit.si/${meetingRoom}`;
+
     const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
-    const updated = stored.map(b => b.id === bookingId ? { ...b, status: 'approved' as const } : b);
+    const updated = stored.map(b => b.id === bookingId ? { ...b, status: 'approved' as const, meetingLink, meetingRoom } : b);
     localStorage.setItem('placeai_bookings', JSON.stringify(updated));
 
-    // Also add a notification for the student
+    // Also add a notification for the student with meeting link
     const booking = allBookings.find(b => b.id === bookingId);
     if (booking) {
       const notifications = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
@@ -113,14 +139,16 @@ export default function ExpertDashboardPage() {
         role: booking.role,
         date: booking.date,
         time: booking.time,
-        message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} has been APPROVED! ✅`,
+        meetingLink,
+        meetingRoom,
+        message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} has been APPROVED! ✅ Click Join to start your video interview.`,
         read: false,
         createdAt: new Date().toISOString(),
       });
       localStorage.setItem('placeai_notifications', JSON.stringify(notifications));
     }
 
-    setAllBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'approved' } : b));
+    setAllBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'approved', meetingLink, meetingRoom } : b));
   };
 
   const handleReject = (bookingId: string) => {
@@ -400,9 +428,20 @@ export default function ExpertDashboardPage() {
                       ⚠ Weak: {booking.weakAreas[0]}
                     </span>
                   </div>
-                  <button className="btn-primary" onClick={() => { setSelectedStudentId(booking.id); setActiveView('student'); }} style={{ width: '100%', padding: '10px', fontSize: '0.85rem' }}>
-                    View Full Profile & Rate →
-                  </button>
+                  <div style={{ display: 'flex', gap: 10 }}>
+                    {booking.meetingRoom && (
+                      <button onClick={() => router.push(buildMeetingUrl(booking, booking.meetingRoom!))} style={{
+                        flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(16,185,129,0.4)',
+                        background: 'rgba(16,185,129,0.15)', color: '#34d399', fontWeight: 700, fontSize: '0.85rem',
+                        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                      }}>
+                        <Video size={16} /> Join Interview
+                      </button>
+                    )}
+                    <button className="btn-primary" onClick={() => { setSelectedStudentId(booking.id); setActiveView('student'); }} style={{ flex: 1, padding: '10px', fontSize: '0.85rem' }}>
+                      View Profile & Rate →
+                    </button>
+                  </div>
                 </div>
               ))}
               </div>

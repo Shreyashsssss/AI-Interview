@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
 import {
   Brain, Code2, BookOpen, Calendar, TrendingUp, Target, Star, Clock,
-  ArrowRight, Zap, CheckCircle, AlertCircle, ChevronRight, Activity, X, XCircle, Bell
+  ArrowRight, Zap, CheckCircle, AlertCircle, ChevronRight, Activity, X, XCircle, Bell, Video
 } from 'lucide-react';
 
 interface Notification {
@@ -18,6 +18,8 @@ interface Notification {
   role: string;
   date: string;
   time: string;
+  meetingLink?: string;
+  meetingRoom?: string;
   message: string;
   read: boolean;
   createdAt: string;
@@ -53,8 +55,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!isLoading && !user) router.push('/auth/login');
     if (!isLoading && user && user.role !== 'student') {
-      if (user.role === 'expert') router.push('/expert/dashboard');
-      else router.push('/admin');
+      router.push('/expert/dashboard');
     }
   }, [user, isLoading, router]);
 
@@ -156,7 +157,7 @@ export default function DashboardPage() {
                     { label: 'Role', val: showPopup.role },
                     { label: 'Date', val: showPopup.date },
                     { label: 'Time', val: showPopup.time },
-                    { label: 'Mode', val: 'Video Call' },
+                    { label: 'Mode', val: 'Video Call (Jitsi Meet)' },
                   ].map(({ label, val }) => (
                     <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', fontSize: '0.85rem' }}>
                       <span style={{ color: 'var(--text-muted)' }}>{label}</span>
@@ -168,9 +169,28 @@ export default function DashboardPage() {
 
               <div style={{ display: 'flex', gap: 10 }}>
                 {showPopup.type === 'approved' ? (
-                  <button className="btn-primary" onClick={dismissPopup} style={{ flex: 1, padding: '12px' }}>
-                    Got it! 
-                  </button>
+                  <>
+                    {showPopup.meetingRoom && (
+                      <button className="btn-primary" onClick={() => {
+                        const params = new URLSearchParams({
+                          room: showPopup.meetingRoom!,
+                          bookingId: showPopup.id,
+                          expertName: showPopup.expertName,
+                          expertCompany: showPopup.expertCompany,
+                          studentName: user?.name || '',
+                          role: showPopup.role,
+                          date: showPopup.date,
+                          time: showPopup.time,
+                        });
+                        router.push(`/interview/room?${params.toString()}`);
+                      }} style={{ flex: 1, padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                        <Video size={18} /> Join Interview
+                      </button>
+                    )}
+                    <button className="btn-secondary" onClick={dismissPopup} style={{ flex: showPopup.meetingRoom ? 0 : 1, padding: '12px', minWidth: 80 }}>
+                      Later
+                    </button>
+                  </>
                 ) : (
                   <>
                     <button className="btn-secondary" onClick={dismissPopup} style={{ flex: 1, padding: '12px' }}>
