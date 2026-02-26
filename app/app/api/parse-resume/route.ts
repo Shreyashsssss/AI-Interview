@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
 
     // ── Check cache first (by file hash) ─────────────────────────────────
     const fileHash = crypto.createHash('md5').update(buffer).digest('hex');
-    const cached = getCachedAnalysis(fileHash);
+    const cached = await getCachedAnalysis(fileHash);
     if (cached) {
       console.log('✅ Returning cached resume analysis for hash:', fileHash);
       return NextResponse.json({ success: true, usedAI: true, cached: true, ...cached });
@@ -158,10 +158,10 @@ export async function POST(req: NextRequest) {
     parsed.extracted.technicalScore = parsed.extracted.technicalScore ?? 0;
     parsed.extracted.communicationScore = parsed.extracted.communicationScore ?? 0;
 
-    // ── Save to SQLite ────────────────────────────────────────────────────
+    // ── Save to Supabase ──────────────────────────────────────────────────
     try {
-      saveResumeAnalysis(userEmail, fileName, fileHash, parsed);
-      console.log('✅ Saved resume analysis to SQLite for:', userEmail);
+      await saveResumeAnalysis(userEmail, fileName, fileHash, parsed);
+      console.log('✅ Saved resume analysis to Supabase for:', userEmail);
     } catch (dbErr: any) {
       console.warn('DB save warning:', dbErr.message);
     }

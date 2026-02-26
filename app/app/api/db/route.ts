@@ -4,7 +4,7 @@ import {
   createBooking, getBookingsByExpert, getBookingsByStudent, updateBookingStatus, getBookingById,
   createNotification, getNotificationsByStudent, markNotificationRead,
   saveAISession, getAISessions, getAISessionStats,
-  saveQuizAttempt, getQuizAttempts, getQuizStats, getQuizTotalAttempts,
+  saveQuizAttempt, getQuizAttempts, getQuizStats,
   saveFeedback, getFeedbackByExpert, getExpertStats,
   logActivity, getRecentActivity,
   getStudentDashboardStats, getScoreTrend,
@@ -20,51 +20,41 @@ export async function GET(req: NextRequest) {
       // ── Users ──────────────────────────────────────────────
       case 'getUser': {
         const email = searchParams.get('email') || '';
-        const user = findUserByEmail(email);
+        const user = await findUserByEmail(email);
         if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-        // Parse JSON fields
-        user.skills = safeJSON(user.skills, []);
         return NextResponse.json(user);
       }
       case 'getAllExperts': {
-        const experts = getAllExperts().map(e => ({
-          ...e,
-          skills: safeJSON(e.skills, []),
-          expertise: safeJSON(e.expertise, []),
-        }));
+        const experts = await getAllExperts();
         return NextResponse.json(experts);
       }
       case 'getExpertsByDomain': {
         const domain = searchParams.get('domain') || '';
-        const experts = getExpertsByDomain(domain).map(e => ({
-          ...e,
-          skills: safeJSON(e.skills, []),
-          expertise: safeJSON(e.expertise, []),
-        }));
+        const experts = await getExpertsByDomain(domain);
         return NextResponse.json(experts);
       }
 
       // ── Bookings ───────────────────────────────────────────
       case 'getBookingsByExpert': {
         const expertId = searchParams.get('expertId') || '';
-        const bookings = getBookingsByExpert(expertId).map(parseBookingJSON);
+        const bookings = (await getBookingsByExpert(expertId)).map(parseBooking);
         return NextResponse.json(bookings);
       }
       case 'getBookingsByStudent': {
         const email = searchParams.get('email') || '';
-        const bookings = getBookingsByStudent(email).map(parseBookingJSON);
+        const bookings = (await getBookingsByStudent(email)).map(parseBooking);
         return NextResponse.json(bookings);
       }
       case 'getBooking': {
         const id = searchParams.get('id') || '';
-        const booking = getBookingById(id);
-        return NextResponse.json(booking ? parseBookingJSON(booking) : null);
+        const booking = await getBookingById(id);
+        return NextResponse.json(booking ? parseBooking(booking) : null);
       }
 
       // ── Notifications ──────────────────────────────────────
       case 'getNotifications': {
         const email = searchParams.get('email') || '';
-        const notifs = getNotificationsByStudent(email).map(n => ({
+        const notifs = (await getNotificationsByStudent(email)).map(n => ({
           ...n,
           read: !!n.read,
           meetingLink: n.meeting_link,
@@ -80,55 +70,52 @@ export async function GET(req: NextRequest) {
       // ── AI Sessions ────────────────────────────────────────
       case 'getAISessions': {
         const email = searchParams.get('email') || '';
-        const sessions = getAISessions(email).map(s => ({
+        const sessions = (await getAISessions(email)).map(s => ({
           ...s,
-          scores: safeJSON(s.scores, {}),
-          questions: safeJSON(s.questions, []),
-          answers: safeJSON(s.answers, []),
           createdAt: s.created_at,
         }));
         return NextResponse.json(sessions);
       }
       case 'getAISessionStats': {
         const email = searchParams.get('email') || '';
-        return NextResponse.json(getAISessionStats(email));
+        return NextResponse.json(await getAISessionStats(email));
       }
 
       // ── Quiz ───────────────────────────────────────────────
       case 'getQuizAttempts': {
         const email = searchParams.get('email') || '';
-        return NextResponse.json(getQuizAttempts(email));
+        return NextResponse.json(await getQuizAttempts(email));
       }
       case 'getQuizStats': {
         const email = searchParams.get('email') || '';
-        return NextResponse.json(getQuizStats(email));
+        return NextResponse.json(await getQuizStats(email));
       }
 
       // ── Feedback ───────────────────────────────────────────
       case 'getFeedbackByExpert': {
         const expertId = searchParams.get('expertId') || '';
-        return NextResponse.json(getFeedbackByExpert(expertId));
+        return NextResponse.json(await getFeedbackByExpert(expertId));
       }
       case 'getExpertStats': {
         const expertId = searchParams.get('expertId') || '';
-        return NextResponse.json(getExpertStats(expertId));
+        return NextResponse.json(await getExpertStats(expertId));
       }
 
       // ── Activity ───────────────────────────────────────────
       case 'getRecentActivity': {
         const email = searchParams.get('email') || '';
         const limit = parseInt(searchParams.get('limit') || '10');
-        return NextResponse.json(getRecentActivity(email, limit));
+        return NextResponse.json(await getRecentActivity(email, limit));
       }
 
       // ── Dashboard Stats ────────────────────────────────────
       case 'getDashboardStats': {
         const email = searchParams.get('email') || '';
-        return NextResponse.json(getStudentDashboardStats(email));
+        return NextResponse.json(await getStudentDashboardStats(email));
       }
       case 'getScoreTrend': {
         const email = searchParams.get('email') || '';
-        return NextResponse.json(getScoreTrend(email));
+        return NextResponse.json(await getScoreTrend(email));
       }
 
       default:
@@ -150,55 +137,51 @@ export async function POST(req: NextRequest) {
       // ── Auth ────────────────────────────────────────────────
       case 'login': {
         const { email, password } = body;
-        const user = findUserByEmail(email);
+        const user = await findUserByEmail(email);
         if (!user) return NextResponse.json({ error: 'User not found' }, { status: 401 });
         if (user.password_hash !== password) return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
-        user.skills = safeJSON(user.skills, []);
-        // Map DB columns to camelCase for frontend
-        const mapped = mapUserForFrontend(user);
-        return NextResponse.json(mapped);
+        return NextResponse.json(mapUserForFrontend(user));
       }
       case 'register': {
         const { id, email, password, name, role, college, company } = body;
-        const existing = findUserByEmail(email);
+        const existing = await findUserByEmail(email);
         if (existing) return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
-        createUser({ id, email, password, name, role, college, company });
-        const created = findUserByEmail(email);
+        await createUser({ id, email, password, name, role, college, company });
+        const created = await findUserByEmail(email);
         return NextResponse.json(mapUserForFrontend(created));
       }
       case 'updateProfile': {
         const { email, data } = body;
-        updateUser(email, data);
-        const updated = findUserByEmail(email);
-        if (updated) updated.skills = safeJSON(updated.skills, []);
+        await updateUser(email, data);
+        const updated = await findUserByEmail(email);
         return NextResponse.json(updated ? mapUserForFrontend(updated) : null);
       }
 
       // ── Bookings ───────────────────────────────────────────
       case 'createBooking': {
-        createBooking(body.booking);
+        await createBooking(body.booking);
         return NextResponse.json({ success: true });
       }
       case 'updateBookingStatus': {
         const { bookingId, status, meetingRoom, meetingLink } = body;
-        updateBookingStatus(bookingId, status, meetingRoom, meetingLink);
+        await updateBookingStatus(bookingId, status, meetingRoom, meetingLink);
         return NextResponse.json({ success: true });
       }
 
       // ── Notifications ──────────────────────────────────────
       case 'createNotification': {
-        createNotification(body.notification);
+        await createNotification(body.notification);
         return NextResponse.json({ success: true });
       }
       case 'markNotificationRead': {
-        markNotificationRead(body.id);
+        await markNotificationRead(body.id);
         return NextResponse.json({ success: true });
       }
 
       // ── AI Sessions ────────────────────────────────────────
       case 'saveAISession': {
-        saveAISession(body.session);
-        logActivity({
+        await saveAISession(body.session);
+        await logActivity({
           userEmail: body.session.userEmail,
           type: 'interview',
           title: `AI Interview — ${body.session.jobRole}`,
@@ -212,8 +195,8 @@ export async function POST(req: NextRequest) {
 
       // ── Quiz ───────────────────────────────────────────────
       case 'saveQuizAttempt': {
-        saveQuizAttempt(body.attempt);
-        logActivity({
+        await saveQuizAttempt(body.attempt);
+        await logActivity({
           userEmail: body.attempt.userEmail,
           type: 'quiz',
           title: `Completed ${body.attempt.section.charAt(0).toUpperCase() + body.attempt.section.slice(1)} Quiz`,
@@ -227,13 +210,13 @@ export async function POST(req: NextRequest) {
 
       // ── Feedback ───────────────────────────────────────────
       case 'saveFeedback': {
-        saveFeedback(body.feedback);
+        await saveFeedback(body.feedback);
         return NextResponse.json({ success: true });
       }
 
       // ── Activity ───────────────────────────────────────────
       case 'logActivity': {
-        logActivity(body.entry);
+        await logActivity(body.entry);
         return NextResponse.json({ success: true });
       }
 
@@ -247,18 +230,13 @@ export async function POST(req: NextRequest) {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
-function safeJSON(str: any, fallback: any) {
-  if (!str) return fallback;
-  if (typeof str !== 'string') return str;
-  try { return JSON.parse(str); } catch { return fallback; }
-}
 
-function parseBookingJSON(b: any) {
+function parseBooking(b: any) {
   return {
     ...b,
-    skills: safeJSON(b.skills, []),
-    weakAreas: safeJSON(b.weak_areas, []),
-    aptitudeScores: safeJSON(b.aptitude_scores, {}),
+    // Supabase returns JSONB natively — no parsing needed
+    weakAreas: b.weak_areas || [],
+    aptitudeScores: b.aptitude_scores || {},
     studentName: b.student_name,
     studentEmail: b.student_email,
     expertId: b.expert_id,
@@ -275,6 +253,7 @@ function parseBookingJSON(b: any) {
 }
 
 function mapUserForFrontend(u: any) {
+  if (!u) return null;
   return {
     id: u.id,
     email: u.email,
@@ -283,7 +262,7 @@ function mapUserForFrontend(u: any) {
     avatar: u.avatar,
     college: u.college,
     company: u.company,
-    skills: safeJSON(u.skills, []),
+    skills: u.skills || [],
     targetRole: u.target_role,
     cgpa: u.cgpa,
     graduationYear: u.graduation_year,
