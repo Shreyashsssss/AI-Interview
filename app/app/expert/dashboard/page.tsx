@@ -31,33 +31,7 @@ interface Booking {
 }
 
 // Hardcoded bookings that are already confirmed (legacy data)
-const LEGACY_BOOKINGS: Booking[] = [
-  {
-    id: 'b1', studentName: 'Rahul Verma', studentEmail: 'rahul@demo.com', college: 'IIT Delhi', role: 'Backend Engineer',
-    expertId: 'be1', expertName: 'Arjun Kapoor', expertCompany: 'Amazon', expertDesignation: 'Principal Engineer',
-    expertAvatar: 'AK', expertColor: '#22d3ee',
-    date: 'Feb 27, 2026', time: '11:00 AM', status: 'confirmed',
-    createdAt: new Date().toISOString(),
-    aptitudeScores: { quantitative: 82, logical: 78, verbal: 65 },
-    skills: ['Java', 'Spring Boot', 'SQL', 'Redis'],
-    aiScore: 79, weakAreas: ['System Design', 'Optimization'],
-  },
-  {
-    id: 'b2', studentName: 'Anjali Nair', studentEmail: 'anjali@demo.com', college: 'NIT Trichy', role: 'Full Stack Developer',
-    expertId: 'fs1', expertName: 'Priya Mehta', expertCompany: 'Google', expertDesignation: 'Senior SWE',
-    expertAvatar: 'PM', expertColor: '#a78bfa',
-    date: 'Feb 28, 2026', time: '3:00 PM', status: 'confirmed',
-    createdAt: new Date().toISOString(),
-    aptitudeScores: { quantitative: 91, logical: 88, verbal: 72 },
-    skills: ['React', 'Node.js', 'MongoDB', 'AWS'],
-    aiScore: 85, weakAreas: ['Behavioral', 'Leadership questions'],
-  },
-];
-
-const PAST_SESSIONS = [
-  { studentName: 'Kartik Rao', role: 'Data Scientist', date: 'Feb 24, 2026', rating: 4, feedback: 'Strong ML concepts, needs work on statistics' },
-  { studentName: 'Meera Shah', role: 'Frontend Developer', date: 'Feb 22, 2026', rating: 5, feedback: 'Excellent React knowledge and communication!' },
-];
+const LEGACY_BOOKINGS: Booking[] = [];
 
 type ActiveView = 'dashboard' | 'student';
 
@@ -69,23 +43,54 @@ export default function ExpertDashboardPage() {
   const [ratings, setRatings] = useState<Record<string, { rating: number; feedback: string }>>({});
   const [submitted, setSubmitted] = useState<Set<string>>(new Set());
   const [allBookings, setAllBookings] = useState<Booking[]>([]);
+  const [pastSessions, setPastSessions] = useState<{ studentName: string; role: string; date: string; rating: number; feedback: string }[]>([]);
+  const [expertStats, setExpertStats] = useState({ totalSessions: 0, thisMonth: 0, avgRating: 0, positivePct: 0 });
 
-  // Load bookings from localStorage + legacy data
+  // Load bookings from DB API
   useEffect(() => {
-    const loadBookings = () => {
-      const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
-      // Merge legacy + stored, deduplicate by id
-      const merged = [...LEGACY_BOOKINGS];
-      stored.forEach(b => {
-        if (!merged.find(m => m.id === b.id)) merged.push(b);
-      });
-      setAllBookings(merged);
+    if (!user || user.role !== 'expert') return;
+    const loadBookings = async () => {
+      try {
+        const expertIdRaw = user.id.replace('expert-', '');
+        const res = await fetch(`/api/db?action=getBookingsByExpert&expertId=${encodeURIComponent(expertIdRaw)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setAllBookings(data);
+        }
+      } catch {}
+    };
+    const loadFeedback = async () => {
+      try {
+        const expertIdRaw = user.id.replace('expert-', '');
+        const [fbRes, statsRes] = await Promise.all([
+          fetch(`/api/db?action=getFeedbackByExpert&expertId=${encodeURIComponent(user.id)}`),
+          fetch(`/api/db?action=getExpertStats&expertId=${encodeURIComponent(user.id)}`),
+        ]);
+        if (fbRes.ok) {
+          const fb = await fbRes.json();
+          setPastSessions(fb.map((f: any) => ({
+            studentName: f.student_name, role: f.role,
+            date: new Date(f.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            rating: f.rating, feedback: f.feedback,
+          })));
+        }
+        if (statsRes.ok) {
+          const stats = await statsRes.json();
+          setExpertStats({
+            totalSessions: stats.total_feedback || 0,
+            thisMonth: stats.total_feedback || 0,
+            avgRating: stats.avg_rating || 0,
+            positivePct: Math.round(stats.positive_pct || 0),
+          });
+        }
+      } catch {}
     };
     loadBookings();
-    // Poll for new bookings every 3 seconds
-    const interval = setInterval(loadBookings, 3000);
+    loadFeedback();
+    // Poll for new bookings every 4 seconds
+    const interval = setInterval(loadBookings, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
 
   if (!user || user.role !== 'expert') {
     return null;
@@ -117,68 +122,97 @@ export default function ExpertDashboardPage() {
     return `/interview/room?${params.toString()}`;
   };
 
-  const handleApprove = (bookingId: string) => {
+  const handleApprove = async (bookingId: string) => {
     // Generate a unique meeting room for this interview
     const meetingRoom = generateMeetingRoom(bookingId);
     const meetingLink = `https://meet.jit.si/${meetingRoom}`;
 
-    const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
-    const updated = stored.map(b => b.id === bookingId ? { ...b, status: 'approved' as const, meetingLink, meetingRoom } : b);
-    localStorage.setItem('placeai_bookings', JSON.stringify(updated));
-
-    // Also add a notification for the student with meeting link
-    const booking = allBookings.find(b => b.id === bookingId);
-    if (booking) {
-      const notifications = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
-      notifications.push({
-        id: `notif-${Date.now()}`,
-        type: 'approved',
-        studentEmail: booking.studentEmail,
-        expertName: booking.expertName,
-        expertCompany: booking.expertCompany,
-        role: booking.role,
-        date: booking.date,
-        time: booking.time,
-        meetingLink,
-        meetingRoom,
-        message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} has been APPROVED! ✅ Click Join to start your video interview.`,
-        read: false,
-        createdAt: new Date().toISOString(),
+    try {
+      await fetch('/api/db', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'updateBookingStatus', bookingId, status: 'approved', meetingRoom, meetingLink }),
       });
-      localStorage.setItem('placeai_notifications', JSON.stringify(notifications));
-    }
+
+      // Also add a notification for the student with meeting link
+      const booking = allBookings.find(b => b.id === bookingId);
+      if (booking) {
+        await fetch('/api/db', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'createNotification',
+            notification: {
+              id: `notif-${Date.now()}`,
+              type: 'approved',
+              studentEmail: booking.studentEmail,
+              expertName: booking.expertName,
+              expertCompany: booking.expertCompany,
+              role: booking.role,
+              date: booking.date,
+              time: booking.time,
+              meetingLink,
+              meetingRoom,
+              message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} has been APPROVED! ✅ Click Join to start your video interview.`,
+            },
+          }),
+        });
+      }
+    } catch {}
 
     setAllBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'approved', meetingLink, meetingRoom } : b));
   };
 
-  const handleReject = (bookingId: string) => {
-    const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
-    const updated = stored.map(b => b.id === bookingId ? { ...b, status: 'rejected' as const } : b);
-    localStorage.setItem('placeai_bookings', JSON.stringify(updated));
-
-    const booking = allBookings.find(b => b.id === bookingId);
-    if (booking) {
-      const notifications = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
-      notifications.push({
-        id: `notif-${Date.now()}`,
-        type: 'rejected',
-        studentEmail: booking.studentEmail,
-        expertName: booking.expertName,
-        expertCompany: booking.expertCompany,
-        role: booking.role,
-        date: booking.date,
-        time: booking.time,
-        message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} was not approved. Please try another slot.`,
-        read: false,
-        createdAt: new Date().toISOString(),
+  const handleReject = async (bookingId: string) => {
+    try {
+      await fetch('/api/db', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'updateBookingStatus', bookingId, status: 'rejected' }),
       });
-      localStorage.setItem('placeai_notifications', JSON.stringify(notifications));
-    }
+
+      const booking = allBookings.find(b => b.id === bookingId);
+      if (booking) {
+        await fetch('/api/db', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'createNotification',
+            notification: {
+              id: `notif-${Date.now()}`,
+              type: 'rejected',
+              studentEmail: booking.studentEmail,
+              expertName: booking.expertName,
+              expertCompany: booking.expertCompany,
+              role: booking.role,
+              date: booking.date,
+              time: booking.time,
+              message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} was not approved. Please try another slot.`,
+            },
+          }),
+        });
+      }
+    } catch {}
 
     setAllBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'rejected' } : b));
   };
 
-  const submitFeedback = (bookingId: string) => {
+  const submitFeedback = async (bookingId: string) => {
+    const r = ratings[bookingId] || { rating: 0, feedback: '' };
+    const booking = allBookings.find(b => b.id === bookingId);
+    try {
+      await fetch('/api/db', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'saveFeedback',
+          feedback: {
+            bookingId,
+            expertId: user?.id || '',
+            studentId: booking?.studentEmail || '',
+            studentName: booking?.studentName || '',
+            role: booking?.role || '',
+            rating: r.rating,
+            feedback: r.feedback,
+          },
+        }),
+      });
+    } catch {}
     setSubmitted(s => new Set([...s, bookingId]));
   };
 
@@ -308,10 +342,10 @@ export default function ExpertDashboardPage() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18, marginBottom: 32 }}>
           {[
-            { label: 'Total Sessions', value: '87', icon: Users, color: '#a78bfa', bg: 'rgba(124,58,237,0.1)' },
-            { label: 'This Month', value: '12', icon: Calendar, color: '#22d3ee', bg: 'rgba(6,182,212,0.1)' },
-            { label: 'Avg Rating', value: '4.9', icon: Star, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-            { label: 'Positive Reviews', value: '96%', icon: TrendingUp, color: '#34d399', bg: 'rgba(16,185,129,0.1)' },
+            { label: 'Total Sessions', value: String(expertStats.totalSessions + confirmedBookings.length), icon: Users, color: '#a78bfa', bg: 'rgba(124,58,237,0.1)' },
+            { label: 'This Month', value: String(expertStats.thisMonth + confirmedBookings.length), icon: Calendar, color: '#22d3ee', bg: 'rgba(6,182,212,0.1)' },
+            { label: 'Avg Rating', value: expertStats.avgRating > 0 ? String(expertStats.avgRating) : '—', icon: Star, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
+            { label: 'Positive Reviews', value: expertStats.positivePct > 0 ? `${expertStats.positivePct}%` : '—', icon: TrendingUp, color: '#34d399', bg: 'rgba(16,185,129,0.1)' },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="stat-box">
               <div className="stat-box-icon" style={{ background: bg, border: `1px solid ${color}30` }}>
@@ -456,7 +490,9 @@ export default function ExpertDashboardPage() {
                 <MessageSquare size={16} color="var(--accent-green)" /> Recent Feedback Given
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                {PAST_SESSIONS.map((s, i) => (
+                {pastSessions.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)', fontSize: '0.82rem' }}>No feedback given yet.</div>
+                ) : pastSessions.map((s, i) => (
                   <div key={i} style={{ padding: '14px', borderRadius: 10, border: '1px solid var(--border)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                       <span style={{ fontWeight: 700, color: 'white', fontSize: '0.85rem' }}>{s.studentName}</span>

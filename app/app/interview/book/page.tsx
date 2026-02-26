@@ -84,11 +84,11 @@ export default function BookInterviewPage() {
 
   const handleBook = async () => {
     setIsSubmitting(true);
-    await new Promise(r => setTimeout(r, 2000)); // simulate API call
 
-    // Save booking to localStorage with "pending" status
+    // Save booking to DB via API
     const booking = {
       id: `booking-${Date.now()}`,
+      studentId: user.id,
       studentName: user.name,
       studentEmail: user.email,
       college: user.college || 'N/A',
@@ -101,18 +101,37 @@ export default function BookInterviewPage() {
       expertColor: expert?.color || '#a78bfa',
       date: NEXT_3_DAYS.find(d => d.date === selectedDate)?.label || '',
       time: selectedTime,
-      status: 'pending', // pending → approved / rejected
-      createdAt: new Date().toISOString(),
+      status: 'pending',
       skills: user.skills || [],
       aiScore: 79,
       weakAreas: ['System Design', 'Optimization'],
       aptitudeScores: { quantitative: 82, logical: 78, verbal: 65 },
     };
 
-    // Save to localStorage bookings array
-    const existingBookings = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
-    existingBookings.push(booking);
-    localStorage.setItem('placeai_bookings', JSON.stringify(existingBookings));
+    try {
+      await fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'createBooking', booking }),
+      });
+      // Log activity
+      await fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'logActivity',
+          entry: {
+            userEmail: user.email,
+            type: 'booking',
+            title: `Mock Interview booked with ${expert?.name}`,
+            detail: selectedRole,
+            score: null,
+            icon: 'calendar',
+            color: '#34d399',
+          },
+        }),
+      });
+    } catch {}
 
     setIsSubmitting(false);
     setBooked(true);

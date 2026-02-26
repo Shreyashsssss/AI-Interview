@@ -79,7 +79,31 @@ export default function QuizPage() {
     return () => clearInterval(timer);
   }, [started, submitted]);
 
-  const handleSubmit = useCallback(() => setSubmitted(true), []);
+  const handleSubmit = useCallback(() => {
+    setSubmitted(true);
+    // Save quiz result to DB
+    const sc = answers.filter((a, i) => a === questions[i]?.answer).length;
+    const acc = Math.round((sc / questions.length) * 100);
+    const tu = TOTAL_TIME - timeLeft;
+    if (user) {
+      fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'saveQuizAttempt',
+          attempt: {
+            userEmail: user.email,
+            section,
+            score: sc,
+            total: questions.length,
+            accuracy: acc,
+            timeUsed: tu,
+            answers,
+          },
+        }),
+      }).catch(() => {});
+    }
+  }, [answers, questions, TOTAL_TIME, timeLeft, section, user]);
 
   const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 

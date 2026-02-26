@@ -203,6 +203,33 @@ function InterviewSessionContent() {
     };
     setScores(finalScores);
     const overall = Math.round(finalScores.technical * 0.4 + finalScores.problemSolving * 0.25 + finalScores.communication * 0.2 + finalScores.optimization * 0.15);
+
+    // Save session to DB
+    if (user) {
+      fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'saveAISession',
+          session: {
+            userEmail: user.email,
+            userName: user.name,
+            jobRole: role,
+            interviewType: type,
+            difficulty,
+            questions: questions.map(q => q.question),
+            answers: messages.filter(m => m.role === 'user').map(m => m.content),
+            codeSnapshots: [code],
+            scores: finalScores,
+            overallScore: overall,
+            tabSwitches,
+            durationSec: sessionTime,
+            completed: true,
+          },
+        }),
+      }).catch(() => {});
+    }
+
     addMessage('ai', [
       `🎉 **Interview Complete!**`,
       ``,

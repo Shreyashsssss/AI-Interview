@@ -25,25 +25,23 @@ interface Notification {
   createdAt: string;
 }
 
-const RECENT_ACTIVITY = [
-  { icon: BookOpen, color: '#a78bfa', text: 'Completed Quantitative Aptitude Quiz', time: '2h ago', score: '78%' },
-  { icon: Code2, color: '#22d3ee', text: 'AI Interview — Full Stack Developer', time: '1d ago', score: '84%' },
-  { icon: Calendar, color: '#34d399', text: 'Mock Interview booked with Priya Mehta', time: '2d ago', score: null },
-  { icon: Brain, color: '#f59e0b', text: 'Completed Logical Reasoning quiz', time: '3d ago', score: '91%' },
-];
-
-const QUICK_STATS = [
-  { label: 'AI Interviews', value: '12', change: '+3 this week', icon: Brain, color: '#a78bfa', bg: 'rgba(124,58,237,0.1)' },
-  { label: 'Avg Score', value: '82%', change: '+6% improvement', icon: TrendingUp, color: '#22d3ee', bg: 'rgba(6,182,212,0.1)' },
-  { label: 'Quizzes Done', value: '24', change: 'Across 3 sections', icon: BookOpen, color: '#34d399', bg: 'rgba(16,185,129,0.1)' },
-  { label: 'Expert Sessions', value: '3', change: '1 upcoming', icon: Star, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-];
-
 const JOB_RECOMMENDATIONS = [
   { role: 'Full Stack Developer', match: 94, skills: ['React', 'Node.js', 'SQL'], companies: ['Google', 'Flipkart', 'Swiggy'] },
   { role: 'Data Scientist', match: 87, skills: ['Python', 'ML', 'Statistics'], companies: ['Amazon', 'Myntra', 'Paytm'] },
   { role: 'Backend Engineer', match: 81, skills: ['Python', 'Node.js', 'SQL'], companies: ['Microsoft', 'Razorpay', 'Zepto'] },
 ];
+
+function timeAgo(dateStr: string) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diff = Math.floor((now.getTime() - d.getTime()) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
+const ICON_MAP: Record<string, any> = { book: BookOpen, code: Code2, calendar: Calendar, brain: Brain, activity: Activity };
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
@@ -51,6 +49,14 @@ export default function DashboardPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showPopup, setShowPopup] = useState<Notification | null>(null);
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const [recentActivity, setRecentActivity] = useState<{ icon: any; color: string; text: string; time: string; score: string | null }[]>([]);
+  const [quickStats, setQuickStats] = useState([
+    { label: 'AI Interviews', value: '—', change: '', icon: Brain, color: '#a78bfa', bg: 'rgba(124,58,237,0.1)' },
+    { label: 'Avg Score', value: '—', change: '', icon: TrendingUp, color: '#22d3ee', bg: 'rgba(6,182,212,0.1)' },
+    { label: 'Quizzes Done', value: '—', change: '', icon: BookOpen, color: '#34d399', bg: 'rgba(16,185,129,0.1)' },
+    { label: 'Expert Sessions', value: '—', change: '', icon: Star, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
+  ]);
+  const [quizPerformance, setQuizPerformance] = useState<{ section: string; score: number; color: string; attempts: number }[]>([]);
 
   useEffect(() => {
     if (!isLoading && !user) router.push('/auth/login');
@@ -59,27 +65,77 @@ export default function DashboardPage() {
     }
   }, [user, isLoading, router]);
 
-  // Poll for new notifications
+  // Load real data from DB
   useEffect(() => {
     if (!user || user.role !== 'student') return;
+    const email = encodeURIComponent(user.email);
 
-    const checkNotifications = () => {
-      const allNotifs: Notification[] = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
-      const myNotifs = allNotifs.filter(n => n.studentEmail === user.email);
-      setNotifications(myNotifs);
+    // Fetch dashboard stats
+    fetch(`/api/db?action=getDashboardStats&email=${email}`)
+      .then(r => r.json())
+      .then(stats => {
+        setQuickStats([
+          { label: 'AI Interviews', value: String(stats.aiInterviews || 0), change: '', icon: Brain, color: '#a78bfa', bg: 'rgba(124,58,237,0.1)' },
+          { label: 'Avg Score', value: stats.avgScore ? `${stats.avgScore}%` : '—', change: '', icon: TrendingUp, color: '#22d3ee', bg: 'rgba(6,182,212,0.1)' },
+          { label: 'Quizzes Done', value: String(stats.quizzesDone || 0), change: '', icon: BookOpen, color: '#34d399', bg: 'rgba(16,185,129,0.1)' },
+          { label: 'Expert Sessions', value: String(stats.expertSessions || 0), change: '', icon: Star, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
+        ]);
+      }).catch(() => {});
 
-      // Show popup for the first unread notification that hasn't been dismissed
-      const unread = myNotifs.find(n => !n.read && !dismissedIds.has(n.id));
-      if (unread && (!showPopup || showPopup.id !== unread.id)) {
-        setShowPopup(unread);
-        // Mark as read
-        const updated = allNotifs.map(n => n.id === unread.id ? { ...n, read: true } : n);
-        localStorage.setItem('placeai_notifications', JSON.stringify(updated));
-      }
+    // Fetch recent activity
+    fetch(`/api/db?action=getRecentActivity&email=${email}&limit=5`)
+      .then(r => r.json())
+      .then(activities => {
+        setRecentActivity(activities.map((a: any) => ({
+          icon: ICON_MAP[a.icon] || Activity,
+          color: a.color || '#a78bfa',
+          text: a.title,
+          time: timeAgo(a.created_at),
+          score: a.score || null,
+        })));
+      }).catch(() => {});
+
+    // Fetch quiz stats per section
+    fetch(`/api/db?action=getQuizStats&email=${email}`)
+      .then(r => r.json())
+      .then(stats => {
+        const COLORS: Record<string, string> = { quantitative: '#a78bfa', logical: '#22d3ee', verbal: '#f59e0b' };
+        const NAMES: Record<string, string> = { quantitative: 'Quantitative Aptitude', logical: 'Logical Reasoning', verbal: 'Verbal Ability' };
+        setQuizPerformance(stats.map((s: any) => ({
+          section: NAMES[s.section] || s.section,
+          score: Math.round(s.avg_accuracy),
+          color: COLORS[s.section] || '#a78bfa',
+          attempts: s.attempts,
+        })));
+      }).catch(() => {});
+  }, [user]);
+
+  // Poll for new notifications from DB
+  useEffect(() => {
+    if (!user || user.role !== 'student') return;
+    const email = encodeURIComponent(user.email);
+
+    const checkNotifications = async () => {
+      try {
+        const res = await fetch(`/api/db?action=getNotifications&email=${email}`);
+        if (res.ok) {
+          const myNotifs = await res.json();
+          setNotifications(myNotifs);
+          const unread = myNotifs.find((n: Notification) => !n.read && !dismissedIds.has(n.id));
+          if (unread && (!showPopup || showPopup.id !== unread.id)) {
+            setShowPopup(unread);
+            // Mark as read
+            fetch('/api/db', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'markNotificationRead', id: unread.id }),
+            }).catch(() => {});
+          }
+        }
+      } catch {}
     };
 
     checkNotifications();
-    const interval = setInterval(checkNotifications, 2000);
+    const interval = setInterval(checkNotifications, 3000);
     return () => clearInterval(interval);
   }, [user, dismissedIds]);
 
@@ -272,7 +328,7 @@ export default function DashboardPage() {
 
         {/* Quick stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 32 }}>
-          {QUICK_STATS.map(({ label, value, change, icon: Icon, color, bg }) => (
+          {quickStats.map(({ label, value, change, icon: Icon, color, bg }) => (
             <div key={label} className="stat-box">
               <div className="stat-box-icon" style={{ background: bg, border: `1px solid ${color}30` }}>
                 <Icon size={22} color={color} />
@@ -333,11 +389,11 @@ export default function DashboardPage() {
                   View All <ChevronRight size={14} />
                 </button>
               </div>
-              {[
-                { section: 'Quantitative Aptitude', score: 78, color: '#a78bfa', attempts: 4 },
-                { section: 'Logical Reasoning', score: 91, color: '#22d3ee', attempts: 6 },
-                { section: 'Verbal Ability', score: 65, color: '#f59e0b', attempts: 3 },
-              ].map(({ section, score, color, attempts }) => (
+              {(quizPerformance.length > 0 ? quizPerformance : [
+                { section: 'Quantitative Aptitude', score: 0, color: '#a78bfa', attempts: 0 },
+                { section: 'Logical Reasoning', score: 0, color: '#22d3ee', attempts: 0 },
+                { section: 'Verbal Ability', score: 0, color: '#f59e0b', attempts: 0 },
+              ]).map(({ section, score, color, attempts }) => (
                 <div key={section} style={{ marginBottom: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                     <div>
@@ -365,8 +421,10 @@ export default function DashboardPage() {
                 <Activity size={18} color="var(--accent-cyan)" /> Recent Activity
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {RECENT_ACTIVITY.map(({ icon: Icon, color, text, time, score }, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', paddingBottom: 16, borderBottom: i < RECENT_ACTIVITY.length - 1 ? '1px solid var(--border)' : 'none', paddingTop: i > 0 ? 16 : 0 }}>
+                {recentActivity.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)', fontSize: '0.82rem' }}>No recent activity yet. Take a quiz or start an AI interview!</div>
+                ) : recentActivity.map(({ icon: Icon, color, text, time, score }, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', paddingBottom: 16, borderBottom: i < recentActivity.length - 1 ? '1px solid var(--border)' : 'none', paddingTop: i > 0 ? 16 : 0 }}>
                     <div style={{ width: 34, height: 34, borderRadius: 10, background: `${color}15`, border: `1px solid ${color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <Icon size={16} color={color} />
                     </div>
