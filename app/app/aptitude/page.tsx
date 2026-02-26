@@ -1,11 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
 import { BookOpen, Clock, Target, TrendingUp, ChevronRight, BarChart2, Star, Zap } from 'lucide-react';
 
-const SECTIONS = [
+const SECTIONS_META = [
   {
     id: 'quantitative',
     title: 'Quantitative Aptitude',
@@ -16,8 +17,6 @@ const SECTIONS = [
     border: 'rgba(124,58,237,0.25)',
     questions: 20,
     duration: 20,
-    avgScore: 78,
-    attempts: 4,
     difficulty: 'Medium',
     topics: ['Arithmetic', 'Algebra', 'Geometry', 'Probability'],
   },
@@ -31,8 +30,6 @@ const SECTIONS = [
     border: 'rgba(6,182,212,0.25)',
     questions: 20,
     duration: 25,
-    avgScore: 91,
-    attempts: 6,
     difficulty: 'Hard',
     topics: ['Series', 'Syllogisms', 'Direction Sense', 'Puzzles'],
   },
@@ -46,10 +43,8 @@ const SECTIONS = [
     border: 'rgba(245,158,11,0.25)',
     questions: 20,
     duration: 20,
-    avgScore: 65,
-    attempts: 3,
     difficulty: 'Easy',
-    topics:['Reading Comprehension', 'Vocabulary', 'Grammar', 'Para Jumbles'],
+    topics: ['Reading Comprehension', 'Vocabulary', 'Grammar', 'Para Jumbles'],
   },
 ];
 
@@ -57,9 +52,45 @@ export default function AptitudePage() {
   const { user } = useAuth();
   const router = useRouter();
 
+  // Dynamic stats from DB
+  const [sectionStats, setSectionStats] = useState<Record<string, { avg_accuracy: number; best_accuracy: number; attempts: number }>>({});
+  const [totalAttempts, setTotalAttempts] = useState(0);
+
+  useEffect(() => {
+    if (!user?.email) return;
+    fetch(`/api/db?action=getQuizStats&email=${encodeURIComponent(user.email)}`)
+      .then(r => r.json())
+      .then(data => {
+        const arr = Array.isArray(data) ? data : [];
+        const map: Record<string, any> = {};
+        let total = 0;
+        for (const s of arr) {
+          map[s.section] = { avg_accuracy: s.avg_accuracy || 0, best_accuracy: s.best_accuracy || 0, attempts: s.attempts || 0 };
+          total += s.attempts || 0;
+        }
+        setSectionStats(map);
+        setTotalAttempts(total);
+      })
+      .catch(() => {});
+  }, [user?.email]);
+
   if (!user) return null;
 
-  const overallScore = Math.round((78 + 91 + 65) / 3);
+  // Compute overall accuracy from section averages (only sections that have attempts)
+  const activeSections = SECTIONS_META.filter(s => sectionStats[s.id]?.attempts > 0);
+  const overallAccuracy = activeSections.length > 0
+    ? Math.round(activeSections.reduce((sum, s) => sum + (sectionStats[s.id]?.avg_accuracy || 0), 0) / activeSections.length)
+    : 0;
+
+  // Best & weak section
+  let bestSection = '—';
+  let weakSection = '—';
+  if (activeSections.length > 0) {
+    const sorted = [...activeSections].sort((a, b) => (sectionStats[b.id]?.avg_accuracy || 0) - (sectionStats[a.id]?.avg_accuracy || 0));
+    bestSection = sorted[0]?.title.split(' ')[0] || '—';
+    weakSection = sorted[sorted.length - 1]?.title.split(' ')[0] || '—';
+    if (sorted.length === 1) weakSection = '—'; // only one section attempted
+  }
 
   return (
     <div style={{ display: 'flex' }}>
@@ -76,10 +107,10 @@ export default function AptitudePage() {
         {/* Overall stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
           {[
-            { label: 'Overall Accuracy', value: `${overallScore}%`, icon: Target, color: '#a78bfa' },
-            { label: 'Total Attempts', value: '13', icon: BarChart2, color: '#22d3ee' },
-            { label: 'Best Section', value: 'Logical', icon: Star, color: '#34d399' },
-            { label: 'Weak Area', value: 'Verbal', icon: TrendingUp, color: '#f59e0b' },
+            { label: 'Overall Accuracy', value: `${overallAccuracy}%`, icon: Target, color: '#a78bfa' },
+            { label: 'Total Attempts', value: `${totalAttempts}`, icon: BarChart2, color: '#22d3ee' },
+            { label: 'Best Section', value: bestSection, icon: Star, color: '#34d399' },
+            { label: 'Weak Area', value: weakSection, icon: TrendingUp, color: '#f59e0b' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="stat-box">
               <div className="stat-box-icon" style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
@@ -93,7 +124,11 @@ export default function AptitudePage() {
 
         {/* Section cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {SECTIONS.map(({ id, title, desc, icon, color, bg, border, questions, duration, avgScore, attempts, difficulty, topics }) => (
+          {SECTIONS_META.map(({ id, title, desc, icon, color, bg, border, questions, duration, difficulty, topics }) => {
+            const secAttempts = sectionStats[id]?.attempts || 0;
+            const secBest = sectionStats[id]?.best_accuracy || 0;
+            const secAvg = sectionStats[id]?.avg_accuracy || 0;
+            return (
             <div key={id} className="card-no-hover" style={{ padding: 28 }}>
               <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
                 {/* Icon */}
@@ -121,8 +156,8 @@ export default function AptitudePage() {
                   {[
                     { label: 'Questions', value: questions },
                     { label: 'Duration', value: `${duration}m` },
-                    { label: 'Best Score', value: `${avgScore}%` },
-                    { label: 'Attempts', value: attempts },
+                    { label: 'Best Score', value: `${secBest}%` },
+                    { label: 'Attempts', value: secAttempts },
                   ].map(({ label, value }) => (
                     <div key={label} style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'white' }}>{value}</div>
@@ -136,22 +171,22 @@ export default function AptitudePage() {
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.8rem' }}>
                       <span style={{ color: 'var(--text-secondary)' }}>Accuracy</span>
-                      <span style={{ color, fontWeight: 700 }}>{avgScore}%</span>
+                      <span style={{ color, fontWeight: 700 }}>{secAvg}%</span>
                     </div>
                     <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${avgScore}%`, background: color }} />
+                      <div className="progress-fill" style={{ width: `${secAvg}%`, background: color }} />
                     </div>
                   </div>
                   <button className="btn-primary" onClick={() => router.push(`/aptitude/${id}`)} style={{ width: '100%', padding: '10px', fontSize: '0.88rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                     <Zap size={14} /> Start Quiz
                   </button>
-                  <button className="btn-ghost" onClick={() => {}} style={{ width: '100%', padding: '8px', fontSize: '0.82rem' }}>
+                  <button className="btn-ghost" onClick={() => router.push(`/aptitude/history?section=${id}`)} style={{ width: '100%', padding: '8px', fontSize: '0.82rem' }}>
                     View History
                   </button>
                 </div>
               </div>
             </div>
-          ))}
+          );})}
         </div>
 
         {/* Tips */}
