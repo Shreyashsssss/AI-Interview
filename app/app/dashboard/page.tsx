@@ -1,13 +1,27 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
 import {
   Brain, Code2, BookOpen, Calendar, TrendingUp, Target, Star, Clock,
-  ArrowRight, Zap, CheckCircle, AlertCircle, ChevronRight, Activity
+  ArrowRight, Zap, CheckCircle, AlertCircle, ChevronRight, Activity, X, XCircle, Bell
 } from 'lucide-react';
+
+interface Notification {
+  id: string;
+  type: 'approved' | 'rejected';
+  studentEmail: string;
+  expertName: string;
+  expertCompany: string;
+  role: string;
+  date: string;
+  time: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+}
 
 const RECENT_ACTIVITY = [
   { icon: BookOpen, color: '#a78bfa', text: 'Completed Quantitative Aptitude Quiz', time: '2h ago', score: '78%' },
@@ -32,6 +46,9 @@ const JOB_RECOMMENDATIONS = [
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [showPopup, setShowPopup] = useState<Notification | null>(null);
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!isLoading && !user) router.push('/auth/login');
@@ -41,11 +58,135 @@ export default function DashboardPage() {
     }
   }, [user, isLoading, router]);
 
+  // Poll for new notifications
+  useEffect(() => {
+    if (!user || user.role !== 'student') return;
+
+    const checkNotifications = () => {
+      const allNotifs: Notification[] = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
+      const myNotifs = allNotifs.filter(n => n.studentEmail === user.email);
+      setNotifications(myNotifs);
+
+      // Show popup for the first unread notification that hasn't been dismissed
+      const unread = myNotifs.find(n => !n.read && !dismissedIds.has(n.id));
+      if (unread && (!showPopup || showPopup.id !== unread.id)) {
+        setShowPopup(unread);
+        // Mark as read
+        const updated = allNotifs.map(n => n.id === unread.id ? { ...n, read: true } : n);
+        localStorage.setItem('placeai_notifications', JSON.stringify(updated));
+      }
+    };
+
+    checkNotifications();
+    const interval = setInterval(checkNotifications, 2000);
+    return () => clearInterval(interval);
+  }, [user, dismissedIds]);
+
+  const dismissPopup = () => {
+    if (showPopup) {
+      setDismissedIds(prev => new Set([...prev, showPopup.id]));
+    }
+    setShowPopup(null);
+  };
+
   if (isLoading || !user) return null;
 
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar />
+
+      {/* Notification Popup Overlay */}
+      {showPopup && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1000, animation: 'fadeIn 0.3s ease',
+        }}>
+          <div style={{
+            maxWidth: 460, width: '90%', borderRadius: 20, overflow: 'hidden',
+            border: `2px solid ${showPopup.type === 'approved' ? 'rgba(16,185,129,0.4)' : 'rgba(239,68,68,0.4)'}`,
+            background: 'var(--bg-card)', animation: 'fadeInUp 0.4s ease',
+          }}>
+            {/* Popup Header */}
+            <div style={{
+              padding: '24px 28px 20px',
+              background: showPopup.type === 'approved' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+              textAlign: 'center', position: 'relative',
+            }}>
+              <button onClick={dismissPopup} style={{
+                position: 'absolute', top: 12, right: 12, background: 'none', border: 'none',
+                color: 'var(--text-muted)', cursor: 'pointer', padding: 4,
+              }}>
+                <X size={20} />
+              </button>
+              <div style={{
+                width: 64, height: 64, borderRadius: '50%', margin: '0 auto 16px',
+                background: showPopup.type === 'approved' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
+                border: `2px solid ${showPopup.type === 'approved' ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {showPopup.type === 'approved' ? (
+                  <CheckCircle size={32} color="#34d399" />
+                ) : (
+                  <XCircle size={32} color="#f87171" />
+                )}
+              </div>
+              <h2 style={{
+                fontSize: '1.4rem', fontWeight: 800, marginBottom: 6,
+                color: showPopup.type === 'approved' ? '#34d399' : '#f87171',
+              }}>
+                {showPopup.type === 'approved' ? 'Interview Approved! 🎉' : 'Interview Not Approved'}
+              </h2>
+            </div>
+
+            {/* Popup Body */}
+            <div style={{ padding: '20px 28px 28px' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: 20, textAlign: 'center' }}>
+                {showPopup.type === 'approved' ? (
+                  <>Your mock interview with <strong style={{ color: 'white' }}>{showPopup.expertName}</strong> from <strong style={{ color: '#a78bfa' }}>{showPopup.expertCompany}</strong> has been approved!</>
+                ) : (
+                  <>Your interview request with <strong style={{ color: 'white' }}>{showPopup.expertName}</strong> from <strong style={{ color: '#a78bfa' }}>{showPopup.expertCompany}</strong> was not approved. Please try booking another slot.</>
+                )}
+              </p>
+
+              {showPopup.type === 'approved' && (
+                <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 16, marginBottom: 20 }}>
+                  {[
+                    { label: 'Role', val: showPopup.role },
+                    { label: 'Date', val: showPopup.date },
+                    { label: 'Time', val: showPopup.time },
+                    { label: 'Mode', val: 'Video Call' },
+                  ].map(({ label, val }) => (
+                    <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', fontSize: '0.85rem' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>{label}</span>
+                      <span style={{ color: 'white', fontWeight: 600 }}>{val}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: 10 }}>
+                {showPopup.type === 'approved' ? (
+                  <button className="btn-primary" onClick={dismissPopup} style={{ flex: 1, padding: '12px' }}>
+                    Got it! 
+                  </button>
+                ) : (
+                  <>
+                    <button className="btn-secondary" onClick={dismissPopup} style={{ flex: 1, padding: '12px' }}>
+                      Dismiss
+                    </button>
+                    <button className="btn-primary" onClick={() => { dismissPopup(); router.push('/interview/book'); }} style={{ flex: 1, padding: '12px' }}>
+                      Book Another Slot
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="main-content" style={{ padding: '32px 36px', minHeight: '100vh' }}>
         {/* Header */}
         <div style={{ marginBottom: 36 }}>
@@ -59,7 +200,29 @@ export default function DashboardPage() {
                 {user.targetRole && <span style={{ color: '#a78bfa', marginLeft: 8 }}>→ Target: {user.targetRole}</span>}
               </p>
             </div>
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+              {/* Notification Bell */}
+              {notifications.filter(n => !dismissedIds.has(n.id)).length > 0 && (
+                <div style={{ position: 'relative' }}>
+                  <button onClick={() => {
+                    const unread = notifications.find(n => !dismissedIds.has(n.id));
+                    if (unread) setShowPopup(unread);
+                  }} style={{
+                    background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)',
+                    borderRadius: 12, padding: '10px', cursor: 'pointer', position: 'relative',
+                  }}>
+                    <Bell size={20} color="#a78bfa" />
+                    <div style={{
+                      position: 'absolute', top: -4, right: -4, width: 18, height: 18,
+                      borderRadius: '50%', background: '#ef4444', display: 'flex',
+                      alignItems: 'center', justifyContent: 'center', fontSize: '0.65rem',
+                      fontWeight: 800, color: 'white',
+                    }}>
+                      {notifications.filter(n => !dismissedIds.has(n.id)).length}
+                    </div>
+                  </button>
+                </div>
+              )}
               <button className="btn-primary" onClick={() => router.push('/interview/ai')} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Zap size={16} /> Start AI Interview
               </button>

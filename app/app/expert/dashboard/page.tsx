@@ -1,22 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
-import { Calendar, Users, Star, Clock, CheckCircle, Book, TrendingUp, MessageSquare, User, ChevronRight } from 'lucide-react';
+import { Calendar, Users, Star, Clock, CheckCircle, Book, TrendingUp, MessageSquare, User, ChevronRight, XCircle, AlertCircle } from 'lucide-react';
 
-const UPCOMING_BOOKINGS = [
+interface Booking {
+  id: string;
+  studentName: string;
+  studentEmail: string;
+  college: string;
+  role: string;
+  expertId: string;
+  expertName: string;
+  expertCompany: string;
+  expertDesignation: string;
+  expertAvatar: string;
+  expertColor: string;
+  date: string;
+  time: string;
+  status: 'pending' | 'approved' | 'rejected' | 'confirmed';
+  createdAt: string;
+  skills: string[];
+  aiScore: number;
+  weakAreas: string[];
+  aptitudeScores: { quantitative: number; logical: number; verbal: number };
+}
+
+// Hardcoded bookings that are already confirmed (legacy data)
+const LEGACY_BOOKINGS: Booking[] = [
   {
-    id: 'b1', studentName: 'Rahul Verma', college: 'IIT Delhi', role: 'Backend Engineer',
+    id: 'b1', studentName: 'Rahul Verma', studentEmail: 'rahul@demo.com', college: 'IIT Delhi', role: 'Backend Engineer',
+    expertId: 'be1', expertName: 'Arjun Kapoor', expertCompany: 'Amazon', expertDesignation: 'Principal Engineer',
+    expertAvatar: 'AK', expertColor: '#22d3ee',
     date: 'Feb 27, 2026', time: '11:00 AM', status: 'confirmed',
+    createdAt: new Date().toISOString(),
     aptitudeScores: { quantitative: 82, logical: 78, verbal: 65 },
     skills: ['Java', 'Spring Boot', 'SQL', 'Redis'],
     aiScore: 79, weakAreas: ['System Design', 'Optimization'],
   },
   {
-    id: 'b2', studentName: 'Anjali Nair', college: 'NIT Trichy', role: 'Full Stack Developer',
+    id: 'b2', studentName: 'Anjali Nair', studentEmail: 'anjali@demo.com', college: 'NIT Trichy', role: 'Full Stack Developer',
+    expertId: 'fs1', expertName: 'Priya Mehta', expertCompany: 'Google', expertDesignation: 'Senior SWE',
+    expertAvatar: 'PM', expertColor: '#a78bfa',
     date: 'Feb 28, 2026', time: '3:00 PM', status: 'confirmed',
+    createdAt: new Date().toISOString(),
     aptitudeScores: { quantitative: 91, logical: 88, verbal: 72 },
     skills: ['React', 'Node.js', 'MongoDB', 'AWS'],
     aiScore: 85, weakAreas: ['Behavioral', 'Leadership questions'],
@@ -37,12 +66,89 @@ export default function ExpertDashboardPage() {
   const [selectedStudentId, setSelectedStudentId] = useState('');
   const [ratings, setRatings] = useState<Record<string, { rating: number; feedback: string }>>({});
   const [submitted, setSubmitted] = useState<Set<string>>(new Set());
+  const [allBookings, setAllBookings] = useState<Booking[]>([]);
+
+  // Load bookings from localStorage + legacy data
+  useEffect(() => {
+    const loadBookings = () => {
+      const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
+      // Merge legacy + stored, deduplicate by id
+      const merged = [...LEGACY_BOOKINGS];
+      stored.forEach(b => {
+        if (!merged.find(m => m.id === b.id)) merged.push(b);
+      });
+      setAllBookings(merged);
+    };
+    loadBookings();
+    // Poll for new bookings every 3 seconds
+    const interval = setInterval(loadBookings, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (!user || user.role !== 'expert') {
     return null;
   }
 
-  const selectedBooking = UPCOMING_BOOKINGS.find(b => b.id === selectedStudentId);
+  const pendingBookings = allBookings.filter(b => b.status === 'pending');
+  const confirmedBookings = allBookings.filter(b => b.status === 'confirmed' || b.status === 'approved');
+  const UPCOMING_BOOKINGS = [...confirmedBookings, ...pendingBookings];
+
+  const selectedBooking = allBookings.find(b => b.id === selectedStudentId);
+
+  const handleApprove = (bookingId: string) => {
+    const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
+    const updated = stored.map(b => b.id === bookingId ? { ...b, status: 'approved' as const } : b);
+    localStorage.setItem('placeai_bookings', JSON.stringify(updated));
+
+    // Also add a notification for the student
+    const booking = allBookings.find(b => b.id === bookingId);
+    if (booking) {
+      const notifications = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
+      notifications.push({
+        id: `notif-${Date.now()}`,
+        type: 'approved',
+        studentEmail: booking.studentEmail,
+        expertName: booking.expertName,
+        expertCompany: booking.expertCompany,
+        role: booking.role,
+        date: booking.date,
+        time: booking.time,
+        message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} has been APPROVED! ✅`,
+        read: false,
+        createdAt: new Date().toISOString(),
+      });
+      localStorage.setItem('placeai_notifications', JSON.stringify(notifications));
+    }
+
+    setAllBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'approved' } : b));
+  };
+
+  const handleReject = (bookingId: string) => {
+    const stored: Booking[] = JSON.parse(localStorage.getItem('placeai_bookings') || '[]');
+    const updated = stored.map(b => b.id === bookingId ? { ...b, status: 'rejected' as const } : b);
+    localStorage.setItem('placeai_bookings', JSON.stringify(updated));
+
+    const booking = allBookings.find(b => b.id === bookingId);
+    if (booking) {
+      const notifications = JSON.parse(localStorage.getItem('placeai_notifications') || '[]');
+      notifications.push({
+        id: `notif-${Date.now()}`,
+        type: 'rejected',
+        studentEmail: booking.studentEmail,
+        expertName: booking.expertName,
+        expertCompany: booking.expertCompany,
+        role: booking.role,
+        date: booking.date,
+        time: booking.time,
+        message: `Your interview with ${booking.expertName} (${booking.expertCompany}) for ${booking.role} on ${booking.date} at ${booking.time} was not approved. Please try another slot.`,
+        read: false,
+        createdAt: new Date().toISOString(),
+      });
+      localStorage.setItem('placeai_notifications', JSON.stringify(notifications));
+    }
+
+    setAllBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'rejected' } : b));
+  };
 
   const submitFeedback = (bookingId: string) => {
     setSubmitted(s => new Set([...s, bookingId]));
@@ -168,7 +274,7 @@ export default function ExpertDashboardPage() {
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>
             Expert Dashboard
           </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Welcome back, {user.name}. You have {UPCOMING_BOOKINGS.length} upcoming sessions.</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Welcome back, {user.name}. You have {confirmedBookings.length} confirmed and {pendingBookings.length} pending sessions.</p>
         </div>
 
         {/* Stats */}
@@ -191,12 +297,82 @@ export default function ExpertDashboardPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24 }}>
           {/* Upcoming bookings */}
-          <div className="card-no-hover" style={{ padding: 28 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Calendar size={18} color="var(--accent-cyan)" /> Upcoming Interviews
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {UPCOMING_BOOKINGS.map(booking => (
+          <div>
+            {/* Pending Approval Section */}
+            {pendingBookings.length > 0 && (
+              <div className="card-no-hover" style={{ padding: 28, marginBottom: 24, border: '1px solid rgba(245,158,11,0.3)' }}>
+                <h2 style={{ fontWeight: 700, color: '#f59e0b', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <AlertCircle size={18} color="#f59e0b" /> Pending Approval ({pendingBookings.length})
+                </h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {pendingBookings.map(booking => (
+                    <div key={booking.id} style={{ padding: '18px', borderRadius: 12, border: '1px solid rgba(245,158,11,0.25)', background: 'rgba(245,158,11,0.05)' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
+                            {booking.studentName.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>{booking.studentName}</div>
+                            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{booking.college}</div>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <span className="badge" style={{ fontSize: '0.72rem', background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' }}>⏳ Pending</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: 16, marginBottom: 14, fontSize: '0.82rem' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>🎯 {booking.role}</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>📅 {booking.date}</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>🕐 {booking.time}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+                        {booking.skills.slice(0, 3).map(s => <span key={s} className="badge badge-purple" style={{ fontSize: '0.7rem' }}>{s}</span>)}
+                        {booking.skills.length > 3 && <span className="badge badge-blue" style={{ fontSize: '0.7rem' }}>+{booking.skills.length - 3}</span>}
+                      </div>
+                      <div style={{ display: 'flex', gap: 10 }}>
+                        <button onClick={() => handleApprove(booking.id)} style={{
+                          flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(16,185,129,0.4)',
+                          background: 'rgba(16,185,129,0.15)', color: '#34d399', fontWeight: 700, fontSize: '0.85rem',
+                          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                          transition: 'all 0.2s',
+                        }}>
+                          <CheckCircle size={16} /> Approve
+                        </button>
+                        <button onClick={() => handleReject(booking.id)} style={{
+                          flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(239,68,68,0.4)',
+                          background: 'rgba(239,68,68,0.1)', color: '#f87171', fontWeight: 700, fontSize: '0.85rem',
+                          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                          transition: 'all 0.2s',
+                        }}>
+                          <XCircle size={16} /> Reject
+                        </button>
+                        <button onClick={() => { setSelectedStudentId(booking.id); setActiveView('student'); }} style={{
+                          padding: '10px 16px', borderRadius: 10, border: '1px solid var(--border)',
+                          background: 'transparent', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.82rem',
+                          cursor: 'pointer',
+                        }}>
+                          View Profile
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Confirmed Bookings */}
+            <div className="card-no-hover" style={{ padding: 28 }}>
+              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Calendar size={18} color="var(--accent-cyan)" /> Confirmed Interviews ({confirmedBookings.length})
+              </h2>
+              {confirmedBookings.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                  No confirmed interviews yet.
+                </div>
+              ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {confirmedBookings.map(booking => (
                 <div key={booking.id} style={{ padding: '18px', borderRadius: 12, border: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -209,7 +385,7 @@ export default function ExpertDashboardPage() {
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <span className="badge badge-green" style={{ fontSize: '0.72rem' }}>{booking.status}</span>
+                      <span className="badge badge-green" style={{ fontSize: '0.72rem' }}>✓ {booking.status === 'approved' ? 'Approved' : 'Confirmed'}</span>
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 16, marginBottom: 14, fontSize: '0.82rem' }}>
@@ -229,6 +405,8 @@ export default function ExpertDashboardPage() {
                   </button>
                 </div>
               ))}
+              </div>
+              )}
             </div>
           </div>
 
