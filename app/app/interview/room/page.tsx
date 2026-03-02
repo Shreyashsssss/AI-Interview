@@ -126,7 +126,7 @@ export default function InterviewRoomPage() {
       <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="card-no-hover" style={{ padding: 40, textAlign: 'center', maxWidth: 440 }}>
           <VideoOff size={48} color="#f87171" style={{ margin: '0 auto 20px' }} />
-          <h2 style={{ color: 'white', fontWeight: 800, fontSize: '1.4rem', marginBottom: 10 }}>No Meeting Found</h2>
+          <h2 style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: '1.4rem', marginBottom: 10 }}>No Meeting Found</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>This meeting link is invalid or has expired.</p>
           <button className="btn-primary" onClick={() => router.push(user.role === 'expert' ? '/expert/dashboard' : '/dashboard')} style={{ padding: '12px 32px' }}>
             <ArrowLeft size={16} style={{ marginRight: 8 }} /> Back to Dashboard
@@ -160,7 +160,7 @@ export default function InterviewRoomPage() {
               <Video size={36} color="#a78bfa" />
             </div>
 
-            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', marginBottom: 8 }}>Ready to Join Interview?</h1>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Ready to Join Interview?</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 28 }}>
               Your video conference room is ready. Click join to start.
             </p>
@@ -179,7 +179,7 @@ export default function InterviewRoomPage() {
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <Icon size={16} color="#a78bfa" style={{ flexShrink: 0 }} />
                   <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', minWidth: 70 }}>{label}</span>
-                  <span style={{ color: 'white', fontSize: '0.85rem', fontWeight: 600 }}>{value}</span>
+                  <span style={{ color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 600 }}>{value}</span>
                 </div>
               ))}
             </div>
@@ -235,7 +235,7 @@ export default function InterviewRoomPage() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#34d399', animation: 'pulse 1.5s ease-in-out infinite' }} />
-          <span style={{ color: 'white', fontWeight: 700, fontSize: '0.88rem' }}>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.88rem' }}>
             PlaceAI Interview — {meetingInfo.role}
           </span>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>

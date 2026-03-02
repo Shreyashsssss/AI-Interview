@@ -59,18 +59,18 @@ export default function ExpertDashboardPage() {
               ← Back to Dashboard
             </button>
 
-            <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'white', marginBottom: 28 }}>
+            <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 28 }}>
               Student Profile — <span style={{ color: '#a78bfa' }}>{selectedBooking.studentName}</span>
             </h1>
 
             {/* Student info */}
             <div className="card-no-hover" style={{ padding: 28, marginBottom: 20 }}>
               <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 24 }}>
-                <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1.2rem', color: 'white', flexShrink: 0 }}>
+                <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1.2rem', color: 'var(--text-primary)', flexShrink: 0 }}>
                   {selectedBooking.studentName.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 700, color: 'white', fontSize: '1.1rem' }}>{selectedBooking.studentName}</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.1rem' }}>{selectedBooking.studentName}</div>
                   <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{selectedBooking.college}</div>
                   <div style={{ color: '#a78bfa', fontSize: '0.82rem', fontWeight: 600, marginTop: 2 }}>Target: {selectedBooking.role}</div>
                 </div>
@@ -100,7 +100,7 @@ export default function ExpertDashboardPage() {
                 ].map(({ label, score, color }) => (
                   <div key={label} style={{ marginBottom: 12 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.85rem' }}>
-                      <span style={{ color: 'white' }}>{label}</span>
+                      <span style={{ color: 'var(--text-primary)' }}>{label}</span>
                       <span style={{ fontWeight: 700, color }}>{score}%</span>
                     </div>
                     <div className="progress-bar">
@@ -123,12 +123,12 @@ export default function ExpertDashboardPage() {
             {submitted.has(selectedBooking.id) ? (
               <div style={{ textAlign: 'center', padding: '36px', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 14, background: 'rgba(16,185,129,0.08)' }}>
                 <CheckCircle size={40} color="#34d399" style={{ margin: '0 auto 16px' }} />
-                <div style={{ fontWeight: 700, color: 'white', fontSize: '1.1rem', marginBottom: 6 }}>Feedback Submitted!</div>
+                <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: 6 }}>Feedback Submitted!</div>
                 <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>The student can now view your rating and feedback in their dashboard.</div>
               </div>
             ) : (
               <div className="card-no-hover" style={{ padding: 28 }}>
-                <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1rem' }}>Post-Interview Feedback</h2>
+                <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1rem' }}>Post-Interview Feedback</h2>
                 <div style={{ marginBottom: 20 }}>
                   <label style={{ display: 'block', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.82rem', marginBottom: 10 }}>Rating</label>
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -165,7 +165,7 @@ export default function ExpertDashboardPage() {
       <main className="main-content" style={{ padding: '32px 36px' }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>
             Expert Dashboard
           </h1>
           <p style={{ color: 'var(--text-secondary)' }}>Welcome back, {user.name}. You have {UPCOMING_BOOKINGS.length} upcoming sessions.</p>
@@ -183,7 +183,7 @@ export default function ExpertDashboardPage() {
               <div className="stat-box-icon" style={{ background: bg, border: `1px solid ${color}30` }}>
                 <Icon size={20} color={color} />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6 }}>{label}</div>
             </div>
           ))}
@@ -192,7 +192,7 @@ export default function ExpertDashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24 }}>
           {/* Upcoming bookings */}
           <div className="card-no-hover" style={{ padding: 28 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Calendar size={18} color="var(--accent-cyan)" /> Upcoming Interviews
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -200,11 +200,11 @@ export default function ExpertDashboardPage() {
                 <div key={booking.id} style={{ padding: '18px', borderRadius: 12, border: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
+                      <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
                         {booking.studentName.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
-                        <div style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>{booking.studentName}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{booking.studentName}</div>
                         <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{booking.college}</div>
                       </div>
                     </div>
@@ -235,14 +235,14 @@ export default function ExpertDashboardPage() {
           {/* Past sessions */}
           <div>
             <div className="card-no-hover" style={{ padding: 24 }}>
-              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 18, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 18, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <MessageSquare size={16} color="var(--accent-green)" /> Recent Feedback Given
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {PAST_SESSIONS.map((s, i) => (
                   <div key={i} style={{ padding: '14px', borderRadius: 10, border: '1px solid var(--border)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <span style={{ fontWeight: 700, color: 'white', fontSize: '0.85rem' }}>{s.studentName}</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.85rem' }}>{s.studentName}</span>
                       <div style={{ display: 'flex', gap: 2 }}>
                         {Array.from({ length: s.rating }).map((_, j) => (
                           <Star key={j} size={12} style={{ fill: '#fbbf24', color: '#fbbf24' }} />

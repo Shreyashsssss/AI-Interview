@@ -173,7 +173,7 @@ export default function ProfilePage() {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 4 }}>My Profile</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>My Profile</h1>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>Your profile powers AI interview personalization</p>
             </div>
             <button onClick={handleSave} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px' }}>
@@ -194,7 +194,7 @@ export default function ProfilePage() {
               }}>
                 <Icon size={15} /> {label}
                 {id === 'skills' && skills.length > 0 && (
-                  <span style={{ background: 'var(--accent-purple)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: '0.7rem', fontWeight: 800 }}>
+                  <span style={{ background: 'var(--accent-purple)', color: 'var(--text-primary)', borderRadius: 4, padding: '1px 5px', fontSize: '0.7rem', fontWeight: 800 }}>
                     {skills.length}
                   </span>
                 )}
@@ -314,7 +314,7 @@ export default function ProfilePage() {
                   <Brain size={18} color="#a78bfa" style={{ flexShrink: 0, marginTop: 1 }} />
                   <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                     <span style={{ color: '#a78bfa', fontWeight: 700 }}>AI Interview Impact: </span>
-                    Your AI interviewer will ask questions about <strong style={{ color: 'white' }}>{skills.slice(0, 4).join(', ')}</strong>{skills.length > 4 ? ` and ${skills.length - 4} more skills` : ''}. Keep this list accurate for the best practice!
+                    Your AI interviewer will ask questions about <strong style={{ color: 'var(--text-primary)' }}>{skills.slice(0, 4).join(', ')}</strong>{skills.length > 4 ? ` and ${skills.length - 4} more skills` : ''}. Keep this list accurate for the best practice!
                   </div>
                 </div>
               )}
@@ -326,7 +326,7 @@ export default function ProfilePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {/* Social links */}
               <div className="card-no-hover" style={{ padding: 28 }}>
-                <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 18, fontSize: '0.95rem' }}>🔗 Social & Portfolio Links</h3>
+                <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 18, fontSize: '0.95rem' }}>🔗 Social & Portfolio Links</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <div>
                     <label className="form-label">LinkedIn Profile URL</label>
@@ -342,7 +342,7 @@ export default function ProfilePage() {
               {/* Resume Upload */}
               <div className="card-no-hover" style={{ padding: 28 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <h3 style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>📄 Resume Upload & ATS Analysis</h3>
+                  <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>📄 Resume Upload & ATS Analysis</h3>
                   {resumeFile && (
                     <button onClick={() => { setResumeFile(null); setATSResult(null); setUploadError(''); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.8rem' }}>
                       <RefreshCw size={13} /> Upload New
@@ -369,7 +369,7 @@ export default function ProfilePage() {
                     <div style={{ width: 56, height: 56, borderRadius: 14, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                       <Upload size={26} color="#a78bfa" />
                     </div>
-                    <div style={{ fontWeight: 700, color: 'white', marginBottom: 6 }}>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
                       {isDragging ? 'Drop your file here!' : 'Drag & drop your resume'}
                     </div>
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginBottom: 6 }}>PDF, PNG, JPG, JPEG, WEBP • Max 10MB</div>
@@ -385,7 +385,7 @@ export default function ProfilePage() {
                   // Uploading state
                   <div style={{ textAlign: 'center', padding: '48px', border: '1px solid var(--border)', borderRadius: 14 }}>
                     <div className="loading-spinner" style={{ width: 52, height: 52, borderWidth: 3, margin: '0 auto 20px' }} />
-                    <div style={{ fontWeight: 700, color: 'white', marginBottom: 8 }}>Analyzing Resume...</div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Analyzing Resume...</div>
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>Extracting skills • Calculating ATS score • Detecting job roles</div>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
                       {['Parsing PDF', 'Extracting Skills', 'Scoring ATS', 'Detecting Roles'].map((s, i) => (
@@ -403,7 +403,7 @@ export default function ProfilePage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 10 }}>
                       <CheckCircle size={18} color="#34d399" />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 600, color: 'white', fontSize: '0.86rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{resumeFile.name}</div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.86rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{resumeFile.name}</div>
                         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                           {(resumeFile.size / 1024).toFixed(0)} KB
                           {atsResult.extracted.pageCount ? ` • ${atsResult.extracted.pageCount} page${atsResult.extracted.pageCount > 1 ? 's' : ''}` : ''}
@@ -491,7 +491,7 @@ export default function ProfilePage() {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                     <span style={{ fontSize: '0.85rem' }}>{icon}</span>
-                                    <span style={{ fontSize: '0.82rem', color: 'white', fontWeight: 600 }}>{key}</span>
+                                    <span style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 600 }}>{key}</span>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>— {desc}</span>
                                   </div>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
@@ -548,7 +548,7 @@ export default function ProfilePage() {
                             ].map(({ label, val }) => (
                               <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.81rem' }}>
                                 <span style={{ color: 'var(--text-muted)' }}>{label}</span>
-                                <span style={{ color: 'white', fontWeight: 500, maxWidth: 180, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{val}</span>
+                                <span style={{ color: 'var(--text-primary)', fontWeight: 500, maxWidth: 180, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{val}</span>
                               </div>
                             ))}
                           </div>
@@ -591,7 +591,7 @@ export default function ProfilePage() {
                           <span style={{ color: '#22d3ee', fontWeight: 700, fontSize: '0.82rem' }}>AI Interview Personalization Active</span>
                         </div>
                         <p style={{ fontSize: '0.79rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: '0 0 10px' }}>
-                          Your AI interviewer will ask questions tailored to your resume skills. Top match: <strong style={{ color: 'white' }}>{atsResult.extracted.suggestedRoles[0]?.split(' (')[0]}</strong>.
+                          Your AI interviewer will ask questions tailored to your resume skills. Top match: <strong style={{ color: 'var(--text-primary)' }}>{atsResult.extracted.suggestedRoles[0]?.split(' (')[0]}</strong>.
                         </p>
                         <button className="btn-primary" onClick={() => router.push('/interview/ai')} style={{ padding: '8px 20px', fontSize: '0.82rem' }}>
                           Start AI Interview →
@@ -607,7 +607,7 @@ export default function ProfilePage() {
                             <span style={{ fontSize: '1.2rem' }}>🎯</span>
                           </div>
                           <div>
-                            <div style={{ fontWeight: 700, color: 'white', fontSize: '0.92rem', marginBottom: 3 }}>Resume-Based Technical Quiz</div>
+                            <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.92rem', marginBottom: 3 }}>Resume-Based Technical Quiz</div>
                             <p style={{ fontSize: '0.79rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
                               10 AI-generated questions targeting <strong style={{ color: '#a78bfa' }}>{atsResult.extracted.skills.slice(0, 3).join(', ')}</strong>{atsResult.extracted.skills.length > 3 ? ` +${atsResult.extracted.skills.length - 3} more skills` : ''} from your resume. Timed 15 minutes.
                             </p>

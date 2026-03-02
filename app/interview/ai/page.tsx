@@ -50,7 +50,7 @@ export default function AIInterviewSetupPage() {
               <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Brain size={22} color="white" />
               </div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white' }}>AI Interview Simulation</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)' }}>AI Interview Simulation</h1>
             </div>
             <p style={{ color: 'var(--text-secondary)', marginLeft: 54 }}>
               Personalized interview powered by AI — questions generated from your resume & selected role
@@ -67,7 +67,7 @@ export default function AIInterviewSetupPage() {
             ].map(({ icon: Icon, label, desc, color }) => (
               <div key={label} style={{ padding: '16px', border: '1px solid var(--border)', borderRadius: 12, background: 'var(--bg-card)', textAlign: 'center' }}>
                 <Icon size={22} color={color} style={{ margin: '0 auto 10px' }} />
-                <div style={{ fontWeight: 700, color: 'white', fontSize: '0.88rem' }}>{label}</div>
+                <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.88rem' }}>{label}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 3 }}>{desc}</div>
               </div>
             ))}
@@ -75,7 +75,7 @@ export default function AIInterviewSetupPage() {
 
           {/* Select Job Role */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 6, fontSize: '1rem' }}>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6, fontSize: '1rem' }}>
               1. Select Job Role <span style={{ color: '#f87171', fontSize: '0.8rem' }}>*</span>
             </h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 20 }}>
@@ -89,7 +89,7 @@ export default function AIInterviewSetupPage() {
                   cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',
                 }}>
                   <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>{icon}</div>
-                  <div style={{ fontWeight: 700, color: 'white', fontSize: '0.82rem', marginBottom: 6, lineHeight: 1.3 }}>{role}</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.82rem', marginBottom: 6, lineHeight: 1.3 }}>{role}</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                     {tags.map(t => <span key={t} style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.08)', color: 'var(--text-muted)', padding: '2px 6px', borderRadius: 4 }}>{t}</span>)}
                   </div>
@@ -100,7 +100,7 @@ export default function AIInterviewSetupPage() {
 
           {/* Interview Type */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1rem' }}>2. Interview Type</h2>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1rem' }}>2. Interview Type</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {INTERVIEW_TYPES.map(({ id, label, desc, icon: Icon, color, recommended }) => (
                 <button key={id} onClick={() => setSelectedType(id)} style={{
@@ -111,8 +111,8 @@ export default function AIInterviewSetupPage() {
                   <Icon size={22} color={color} />
                   <div style={{ flex: 1, textAlign: 'left' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>{label}</span>
-                      {recommended && <span style={{ fontSize: '0.65rem', background: 'var(--gradient-primary)', color: 'white', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>RECOMMENDED</span>}
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{label}</span>
+                      {recommended && <span style={{ fontSize: '0.65rem', background: 'var(--gradient-primary)', color: 'var(--text-primary)', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>RECOMMENDED</span>}
                     </div>
                     <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{desc}</span>
                   </div>
@@ -124,7 +124,7 @@ export default function AIInterviewSetupPage() {
 
           {/* Difficulty */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 32 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1rem' }}>3. Difficulty Level</h2>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1rem' }}>3. Difficulty Level</h2>
             <div style={{ display: 'flex', gap: 12 }}>
               {(['easy', 'medium', 'hard'] as const).map(d => (
                 <button key={d} onClick={() => setDifficulty(d)} style={{
@@ -143,7 +143,7 @@ export default function AIInterviewSetupPage() {
           {/* Conditional Job Description Input for Avatar Mode */}
           {selectedType === 'avatar' && (
             <div className="card-no-hover" style={{ padding: 28, marginBottom: 32, background: 'linear-gradient(135deg, rgba(236,72,153,0.1) 0%, transparent 100%)', border: '1px solid rgba(236,72,153,0.3)' }}>
-              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 12, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <UserPlus size={18} color="#ec4899" /> 4. Ingest Job Description (Optional)
               </h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: 16 }}>
@@ -153,7 +153,7 @@ export default function AIInterviewSetupPage() {
                 value={jd}
                 onChange={e => setJd(e.target.value)}
                 placeholder="E.g., Looking for a senior developer proficient in Node.js, microservices architecture, and team leadership..."
-                style={{ width: '100%', height: 120, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)', borderRadius: 10, padding: 16, color: 'white', fontSize: '0.9rem', resize: 'vertical' }}
+                style={{ width: '100%', height: 120, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)', borderRadius: 10, padding: 16, color: 'var(--text-primary)', fontSize: '0.9rem', resize: 'vertical' }}
               />
             </div>
           )}

@@ -86,7 +86,7 @@ export default function QuizHistoryPage() {
             <ChevronLeft size={16} /> Back
           </button>
           <div>
-            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', marginBottom: 4 }}>Quiz History</h1>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>Quiz History</h1>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>View all your past quiz attempts and performance</p>
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function QuizHistoryPage() {
               <div className="stat-box-icon" style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
                 <Icon size={20} color={color} />
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 6 }}>{label}</div>
             </div>
           ))}
@@ -145,7 +145,7 @@ export default function QuizHistoryPage() {
         ) : filtered.length === 0 ? (
           <div className="card-no-hover" style={{ padding: 60, textAlign: 'center' }}>
             <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>📋</div>
-            <div style={{ color: 'white', fontWeight: 700, fontSize: '1.1rem', marginBottom: 6 }}>No Quiz Attempts Yet</div>
+            <div style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '1.1rem', marginBottom: 6 }}>No Quiz Attempts Yet</div>
             <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 24 }}>
               {filter === 'all' ? 'Start a quiz to see your history here.' : `No attempts in ${SECTION_META[filter]?.title || filter}. Take a quiz!`}
             </div>
@@ -183,7 +183,7 @@ export default function QuizHistoryPage() {
 
                   {/* Info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem', marginBottom: 4 }}>{meta.title}</div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem', marginBottom: 4 }}>{meta.title}</div>
                     <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                       {formatDate(attempt.created_at)}
                     </div>
@@ -196,11 +196,11 @@ export default function QuizHistoryPage() {
                       <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>Accuracy</div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white' }}>{attempt.score}/{attempt.total}</div>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>{attempt.score}/{attempt.total}</div>
                       <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>Score</div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white' }}>{formatTime(attempt.time_used)}</div>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>{formatTime(attempt.time_used)}</div>
                       <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>Time</div>
                     </div>
                     <div style={{

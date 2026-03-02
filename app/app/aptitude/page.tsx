@@ -98,7 +98,7 @@ export default function AptitudePage() {
       <main className="main-content" style={{ padding: '32px 36px' }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Aptitude Quiz Center</h1>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Aptitude Quiz Center</h1>
           <p style={{ color: 'var(--text-secondary)' }}>
             Timed assessments across Quantitative, Logical, and Verbal sections with detailed analytics
           </p>
@@ -116,7 +116,7 @@ export default function AptitudePage() {
               <div className="stat-box-icon" style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
                 <Icon size={20} color={color} />
               </div>
-              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6 }}>{label}</div>
             </div>
           ))}
@@ -140,7 +140,7 @@ export default function AptitudePage() {
                 {/* Info */}
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>{title}</h2>
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{title}</h2>
                     <span className={`badge ${difficulty === 'Hard' ? 'badge-red' : difficulty === 'Medium' ? 'badge-orange' : 'badge-green'}`} style={{ fontSize: '0.72rem' }}>
                       {difficulty}
                     </span>
@@ -160,7 +160,7 @@ export default function AptitudePage() {
                     { label: 'Attempts', value: secAttempts },
                   ].map(({ label, value }) => (
                     <div key={label} style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'white' }}>{value}</div>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)' }}>{value}</div>
                       <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>{label}</div>
                     </div>
                   ))}

@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
-import { Brain, Code2, Mic, Zap, Shield, Layers } from 'lucide-react';
+import { Brain, Code2, Mic, Zap, Shield, Layers, Users } from 'lucide-react';
 
 // ─── Domain-organized job roles with languages & question domains ─────────────
 const JOB_DOMAINS = [
@@ -104,21 +104,34 @@ const INTERVIEW_TYPES = [
     recommended: false,
     badge: 'Scalability · Architecture',
   },
+  {
+    id: 'avatar',
+    label: 'HR AI Interview (Avatar Mode)',
+    desc: 'Interactive HR Director interview focused on behavioral competencies and culture fit.',
+    icon: Users,
+    color: '#f43f5e',
+    recommended: false,
+    badge: 'HR · Behavioral',
+  },
 ];
 
 const DIFFICULTY_META = {
-  easy:   { emoji: '🌱', label: 'Easy',   color: '#34d399', bg: 'rgba(16,185,129,0.1)',  desc: '0–1 yr · Fundamentals & basics' },
-  medium: { emoji: '⚡', label: 'Medium', color: '#fbbf24', bg: 'rgba(245,158,11,0.1)',  desc: '2–4 yr · Standard interview level' },
-  hard:   { emoji: '🔥', label: 'Hard',   color: '#f87171', bg: 'rgba(239,68,68,0.1)',   desc: '5+ yr · FAANG / senior level' },
+  easy: { emoji: '🌱', label: 'Easy', color: '#34d399', bg: 'rgba(16,185,129,0.1)', desc: '0–1 yr · Fundamentals & basics' },
+  medium: { emoji: '⚡', label: 'Medium', color: '#fbbf24', bg: 'rgba(245,158,11,0.1)', desc: '2–4 yr · Standard interview level' },
+  hard: { emoji: '🔥', label: 'Hard', color: '#f87171', bg: 'rgba(239,68,68,0.1)', desc: '5+ yr · FAANG / senior level' },
 };
 
 export default function AIInterviewSetupPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [selectedRoles, setSelectedRoles] = useState<string[]>(
     user?.targetRole ? [user.targetRole] : []
   );
-  const [selectedType, setSelectedType] = useState('full');
+
+  const initType = searchParams.get('type') === 'hr' ? 'avatar' : searchParams.get('type');
+  const [selectedType, setSelectedType] = useState(initType && INTERVIEW_TYPES.some(t => t.id === initType) ? initType : 'full');
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
 
   if (!user) return null;
@@ -152,7 +165,7 @@ export default function AIInterviewSetupPage() {
               <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Brain size={22} color="white" />
               </div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white' }}>AI Interview Simulation</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)' }}>AI Interview Simulation</h1>
             </div>
             <p style={{ color: 'var(--text-secondary)', marginLeft: 54 }}>
               Personalized questions generated from your selected roles, skills &amp; difficulty level
@@ -162,7 +175,7 @@ export default function AIInterviewSetupPage() {
           {/* ── Step 1: Job Role (multi-select, by domain) ─────────────────── */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-              <h2 style={{ fontWeight: 700, color: 'white', fontSize: '1rem' }}>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem' }}>
                 1. Select Job Role(s) <span style={{ color: '#f87171', fontSize: '0.8rem' }}>*</span>
               </h2>
               {selectedRoles.length > 0 && (
@@ -197,11 +210,11 @@ export default function AIInterviewSetupPage() {
                       >
                         {selected && (
                           <div style={{ position: 'absolute', top: 8, right: 8, width: 18, height: 18, borderRadius: '50%', background: color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <span style={{ color: 'white', fontSize: '0.65rem', fontWeight: 900 }}>✓</span>
+                            <span style={{ color: 'var(--text-primary)', fontSize: '0.65rem', fontWeight: 900 }}>✓</span>
                           </div>
                         )}
                         <div style={{ fontSize: '1.3rem', marginBottom: 5 }}>{icon}</div>
-                        <div style={{ fontWeight: 700, color: 'white', fontSize: '0.82rem', marginBottom: 5, lineHeight: 1.3 }}>{role}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.82rem', marginBottom: 5, lineHeight: 1.3 }}>{role}</div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginBottom: 6 }}>
                           {tags.map(t => (
                             <span key={t} style={{ fontSize: '0.62rem', background: 'rgba(255,255,255,0.07)', color: 'var(--text-muted)', padding: '2px 5px', borderRadius: 4 }}>{t}</span>
@@ -224,7 +237,7 @@ export default function AIInterviewSetupPage() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {getSelectedRoleMeta().map(r => (
                     <div key={r.role} style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '5px 10px', color: 'var(--text-secondary)' }}>
-                      <span style={{ color: 'white', fontWeight: 600 }}>{r.icon} {r.role}</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{r.icon} {r.role}</span>
                       <span style={{ color: 'var(--text-muted)', marginLeft: 6 }}>· {r.languages.slice(0, 2).join(', ')}</span>
                     </div>
                   ))}
@@ -235,7 +248,7 @@ export default function AIInterviewSetupPage() {
 
           {/* ── Step 2: Interview Type ──────────────────────────────────────── */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 6, fontSize: '1rem' }}>2. Interview Type</h2>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6, fontSize: '1rem' }}>2. Interview Type</h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 18 }}>
               <strong style={{ color: '#a78bfa' }}>Full Interview</strong> combines all three pillars — DSA, System Design &amp; Behavioral — in one session
             </p>
@@ -255,9 +268,9 @@ export default function AIInterviewSetupPage() {
                   <Icon size={20} color={color} />
                   <div style={{ flex: 1, textAlign: 'left' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
-                      <span style={{ fontWeight: 700, color: 'white', fontSize: '0.92rem' }}>{label}</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.92rem' }}>{label}</span>
                       {recommended && (
-                        <span style={{ fontSize: '0.62rem', background: 'var(--gradient-primary)', color: 'white', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>RECOMMENDED</span>
+                        <span style={{ fontSize: '0.62rem', background: 'var(--gradient-primary)', color: 'var(--text-primary)', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>RECOMMENDED</span>
                       )}
                       <span style={{ fontSize: '0.65rem', background: `${color}22`, color, padding: '2px 8px', borderRadius: 4, fontWeight: 600 }}>{badge}</span>
                     </div>
@@ -271,7 +284,7 @@ export default function AIInterviewSetupPage() {
 
           {/* ── Step 3: Difficulty ─────────────────────────────────────────── */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 32 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 6, fontSize: '1rem' }}>3. Difficulty Level</h2>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6, fontSize: '1rem' }}>3. Difficulty Level</h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 18 }}>
               Controls question complexity — harder levels include senior-level optimisation &amp; edge-case reasoning
             </p>

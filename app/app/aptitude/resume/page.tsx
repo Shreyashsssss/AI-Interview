@@ -179,7 +179,7 @@ export default function ResumeQuizPage() {
             <Brain size={36} color="#a78bfa" />
           </div>
 
-          <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'white', marginBottom: 8 }}>Resume-Based Quiz</h1>
+          <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Resume-Based Quiz</h1>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 10, lineHeight: 1.6 }}>
             10 AI-generated technical questions tailored to the skills on your resume
           </p>
@@ -203,7 +203,7 @@ export default function ResumeQuizPage() {
               { label: 'Marks', val: '10 / 0' },
             ].map(({ label, val }) => (
               <div key={label} style={{ background: 'var(--bg-secondary)', borderRadius: 10, padding: '14px', border: '1px solid var(--border)' }}>
-                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>{val}</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>{val}</div>
                 <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
@@ -279,7 +279,7 @@ export default function ResumeQuizPage() {
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
             <div style={{ fontSize: '3rem', marginBottom: 12 }}>{accuracy >= 80 ? '🏆' : accuracy >= 60 ? '👍' : '📚'}</div>
-            <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Quiz Complete!</h1>
+            <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Quiz Complete!</h1>
             <p style={{ color: 'var(--text-secondary)' }}>Resume-Based Technical Quiz Results</p>
           </div>
 
@@ -321,7 +321,7 @@ export default function ResumeQuizPage() {
 
           {/* Question review */}
           <div className="card-no-hover" style={{ padding: 28 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1.05rem' }}>Question Review</h2>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1.05rem' }}>Question Review</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {questions.map((q, i) => {
                 const isCorrect = answers[i] === q.answer;
@@ -329,7 +329,7 @@ export default function ResumeQuizPage() {
                   <div key={i} style={{ padding: '18px', borderRadius: 12, border: `1px solid ${isCorrect ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`, background: isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)' }}>
                     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
                       {isCorrect ? <CheckCircle size={18} color="#34d399" style={{ flexShrink: 0, marginTop: 2 }} /> : <XCircle size={18} color="#f87171" style={{ flexShrink: 0, marginTop: 2 }} />}
-                      <div style={{ fontSize: '0.9rem', color: 'white', fontWeight: 500, lineHeight: 1.5 }}>Q{i + 1}. {q.question}</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>Q{i + 1}. {q.question}</div>
                     </div>
                     <div style={{ paddingLeft: 28, fontSize: '0.82rem' }}>
                       <div style={{ color: '#34d399', marginBottom: 4 }}>✓ Correct: {q.options[q.answer]}</div>
@@ -371,7 +371,7 @@ export default function ResumeQuizPage() {
         {/* Top bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, padding: '14px 20px', background: 'var(--bg-card)', borderRadius: 14, border: '1px solid var(--border)' }}>
           <div>
-            <div style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>Resume-Based Quiz</div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Resume-Based Quiz</div>
             <div style={{ fontSize: '0.75rem', color: '#a78bfa', marginTop: 2 }}>
               {quizSkills.slice(0, 3).join(' · ')}{quizSkills.length > 3 ? ` +${quizSkills.length - 3}` : ''}
             </div>
@@ -398,10 +398,10 @@ export default function ResumeQuizPage() {
           {/* Question card */}
           <div className="card-no-hover" style={{ padding: 32 }}>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 28 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', color: 'white', flexShrink: 0 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-primary)', flexShrink: 0 }}>
                 {current + 1}
               </div>
-              <p style={{ fontSize: '1.05rem', color: 'white', lineHeight: 1.7, fontWeight: 500 }}>{q.question}</p>
+              <p style={{ fontSize: '1.05rem', color: 'var(--text-primary)', lineHeight: 1.7, fontWeight: 500 }}>{q.question}</p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
               {q.options.map((opt, i) => {
@@ -457,7 +457,7 @@ export default function ResumeQuizPage() {
 
           {/* Question navigator */}
           <div className="card-no-hover" style={{ padding: 20 }}>
-            <div style={{ fontWeight: 700, color: 'white', fontSize: '0.85rem', marginBottom: 16 }}>Questions</div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.85rem', marginBottom: 16 }}>Questions</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, marginBottom: 20 }}>
               {questions.map((_, i) => {
                 const ans = answers[i] !== null;

@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import dynamic from 'next/dynamic';
 import {
   Brain, Mic, MicOff, Play, Square, Send, Maximize,
-  Clock, Lightbulb, MessageSquare, Zap, ChevronDown
+  Clock, Lightbulb, MessageSquare, Zap, ChevronDown, Users
 } from 'lucide-react';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
@@ -62,68 +62,68 @@ interface ComplexityResult {
 
 // ─── All supported languages with Monaco IDs and display names ───────────────
 const LANG_META: Record<string, { monacoId: string; label: string; color: string }> = {
-  python:     { monacoId: 'python',     label: 'Python',     color: '#3b82f6' },
+  python: { monacoId: 'python', label: 'Python', color: '#3b82f6' },
   javascript: { monacoId: 'javascript', label: 'JavaScript', color: '#f59e0b' },
   typescript: { monacoId: 'typescript', label: 'TypeScript', color: '#3b82f6' },
-  java:       { monacoId: 'java',       label: 'Java',       color: '#f87171' },
-  cpp:        { monacoId: 'cpp',        label: 'C++',        color: '#a78bfa' },
-  go:         { monacoId: 'go',         label: 'Go',         color: '#22d3ee' },
-  rust:       { monacoId: 'rust',       label: 'Rust',       color: '#f97316' },
-  swift:      { monacoId: 'swift',      label: 'Swift',      color: '#f87171' },
-  kotlin:     { monacoId: 'kotlin',     label: 'Kotlin',     color: '#a78bfa' },
-  dart:       { monacoId: 'dart',       label: 'Dart',       color: '#22d3ee' },
-  csharp:     { monacoId: 'csharp',     label: 'C#',         color: '#34d399' },
-  r:          { monacoId: 'r',          label: 'R',          color: '#60a5fa' },
-  sql:        { monacoId: 'sql',        label: 'SQL',        color: '#fbbf24' },
-  bash:       { monacoId: 'shell',      label: 'Bash',       color: '#34d399' },
-  solidity:   { monacoId: 'sol',        label: 'Solidity',   color: '#a78bfa' },
-  c:          { monacoId: 'c',          label: 'C',          color: '#94a3b8' },
-  scala:      { monacoId: 'scala',      label: 'Scala',      color: '#f87171' },
+  java: { monacoId: 'java', label: 'Java', color: '#f87171' },
+  cpp: { monacoId: 'cpp', label: 'C++', color: '#a78bfa' },
+  go: { monacoId: 'go', label: 'Go', color: '#22d3ee' },
+  rust: { monacoId: 'rust', label: 'Rust', color: '#f97316' },
+  swift: { monacoId: 'swift', label: 'Swift', color: '#f87171' },
+  kotlin: { monacoId: 'kotlin', label: 'Kotlin', color: '#a78bfa' },
+  dart: { monacoId: 'dart', label: 'Dart', color: '#22d3ee' },
+  csharp: { monacoId: 'csharp', label: 'C#', color: '#34d399' },
+  r: { monacoId: 'r', label: 'R', color: '#60a5fa' },
+  sql: { monacoId: 'sql', label: 'SQL', color: '#fbbf24' },
+  bash: { monacoId: 'shell', label: 'Bash', color: '#34d399' },
+  solidity: { monacoId: 'sol', label: 'Solidity', color: '#a78bfa' },
+  c: { monacoId: 'c', label: 'C', color: '#94a3b8' },
+  scala: { monacoId: 'scala', label: 'Scala', color: '#f87171' },
 };
 
 // Per-role preferred languages (first = default)
 const ROLE_LANGS: Record<string, string[]> = {
-  'Full Stack Developer':       ['javascript', 'typescript', 'python', 'java', 'cpp'],
-  'Frontend Developer':         ['javascript', 'typescript', 'cpp', 'python'],
-  'Backend Engineer':           ['python', 'java', 'go', 'cpp', 'javascript'],
-  'Mobile Developer':           ['swift', 'kotlin', 'dart', 'java'],
-  'Data Scientist':             ['python', 'r', 'sql', 'cpp'],
-  'ML Engineer':                ['python', 'cpp', 'bash', 'r'],
-  'Data Engineer':              ['python', 'sql', 'scala', 'java'],
-  'AI / NLP Engineer':          ['python', 'cpp', 'bash'],
-  'DevOps Engineer':            ['bash', 'python', 'go'],
-  'Cloud Architect':            ['bash', 'python', 'go'],
-  'Site Reliability Engineer':  ['go', 'python', 'bash'],
-  'Security Engineer':          ['python', 'c', 'bash'],
-  'Penetration Tester':         ['python', 'bash'],
-  'Blockchain Developer':       ['solidity', 'javascript', 'rust'],
-  'Game Developer':             ['cpp', 'csharp', 'python'],
-  'Embedded Systems':           ['c', 'cpp'],
-  'Product Manager':            ['python', 'sql'],
-  'Business Analyst':           ['sql', 'python'],
+  'Full Stack Developer': ['javascript', 'typescript', 'python', 'java', 'cpp'],
+  'Frontend Developer': ['javascript', 'typescript', 'cpp', 'python'],
+  'Backend Engineer': ['python', 'java', 'go', 'cpp', 'javascript'],
+  'Mobile Developer': ['swift', 'kotlin', 'dart', 'java'],
+  'Data Scientist': ['python', 'r', 'sql', 'cpp'],
+  'ML Engineer': ['python', 'cpp', 'bash', 'r'],
+  'Data Engineer': ['python', 'sql', 'scala', 'java'],
+  'AI / NLP Engineer': ['python', 'cpp', 'bash'],
+  'DevOps Engineer': ['bash', 'python', 'go'],
+  'Cloud Architect': ['bash', 'python', 'go'],
+  'Site Reliability Engineer': ['go', 'python', 'bash'],
+  'Security Engineer': ['python', 'c', 'bash'],
+  'Penetration Tester': ['python', 'bash'],
+  'Blockchain Developer': ['solidity', 'javascript', 'rust'],
+  'Game Developer': ['cpp', 'csharp', 'python'],
+  'Embedded Systems': ['c', 'cpp'],
+  'Product Manager': ['python', 'sql'],
+  'Business Analyst': ['sql', 'python'],
 };
 
 const DEFAULT_LANGS = ['python', 'javascript', 'java', 'cpp', 'go'];
 
 // ─── Code starters per language ──────────────────────────────────────────────
 const CODE_STARTERS: Record<string, string> = {
-  python:     `# Write your solution here\ndef solution():\n    # Your code here\n    pass\n\nif __name__ == "__main__":\n    solution()\n`,
+  python: `# Write your solution here\ndef solution():\n    # Your code here\n    pass\n\nif __name__ == "__main__":\n    solution()\n`,
   javascript: `// Write your solution here\nfunction solution() {\n  // Your code here\n}\nconsole.log(solution());\n`,
   typescript: `// Write your solution here\nfunction solution(): void {\n  // Your code here\n}\nsolution();\n`,
-  java:       `import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Solution sol = new Solution();\n    }\n    public void solve() {\n        // Your code here\n    }\n}\n`,
-  cpp:        `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your solution here\n    return 0;\n}\n`,
-  go:         `package main\nimport "fmt"\n\nfunc solution() {\n    // Your code here\n    fmt.Println("result")\n}\n\nfunc main() {\n    solution()\n}\n`,
-  rust:       `fn solution() {\n    // Your code here\n}\n\nfn main() {\n    solution();\n}\n`,
-  swift:      `import Foundation\n\nfunc solution() {\n    // Your code here\n}\n\nsolution()\n`,
-  kotlin:     `fun solution() {\n    // Your code here\n}\n\nfun main() {\n    solution()\n}\n`,
-  dart:       `void solution() {\n  // Your code here\n}\n\nvoid main() {\n  solution();\n}\n`,
-  csharp:     `using System;\n\nclass Solution {\n    static void Main() {\n        // Your code here\n    }\n}\n`,
-  r:          `# Write your solution here\nsolution <- function() {\n  # Your code here\n}\n\nsolution()\n`,
-  sql:        `-- Write your SQL query here\nSELECT *\nFROM your_table\nWHERE condition;\n`,
-  bash:       `#!/bin/bash\n# Write your solution here\n\nsolution() {\n    # Your code here\n    echo "result"\n}\n\nsolution\n`,
-  solidity:   `// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract Solution {\n    // Your contract here\n    function solve() public {\n        // Your code here\n    }\n}\n`,
-  c:          `#include <stdio.h>\n\nvoid solution() {\n    // Your code here\n}\n\nint main() {\n    solution();\n    return 0;\n}\n`,
-  scala:      `object Solution extends App {\n  def solution(): Unit = {\n    // Your code here\n  }\n\n  solution()\n}\n`,
+  java: `import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Solution sol = new Solution();\n    }\n    public void solve() {\n        // Your code here\n    }\n}\n`,
+  cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your solution here\n    return 0;\n}\n`,
+  go: `package main\nimport "fmt"\n\nfunc solution() {\n    // Your code here\n    fmt.Println("result")\n}\n\nfunc main() {\n    solution()\n}\n`,
+  rust: `fn solution() {\n    // Your code here\n}\n\nfn main() {\n    solution();\n}\n`,
+  swift: `import Foundation\n\nfunc solution() {\n    // Your code here\n}\n\nsolution()\n`,
+  kotlin: `fun solution() {\n    // Your code here\n}\n\nfun main() {\n    solution()\n}\n`,
+  dart: `void solution() {\n  // Your code here\n}\n\nvoid main() {\n  solution();\n}\n`,
+  csharp: `using System;\n\nclass Solution {\n    static void Main() {\n        // Your code here\n    }\n}\n`,
+  r: `# Write your solution here\nsolution <- function() {\n  # Your code here\n}\n\nsolution()\n`,
+  sql: `-- Write your SQL query here\nSELECT *\nFROM your_table\nWHERE condition;\n`,
+  bash: `#!/bin/bash\n# Write your solution here\n\nsolution() {\n    # Your code here\n    echo "result"\n}\n\nsolution\n`,
+  solidity: `// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract Solution {\n    // Your contract here\n    function solve() public {\n        // Your code here\n    }\n}\n`,
+  c: `#include <stdio.h>\n\nvoid solution() {\n    // Your code here\n}\n\nint main() {\n    solution();\n    return 0;\n}\n`,
+  scala: `object Solution extends App {\n  def solution(): Unit = {\n    // Your code here\n  }\n\n  solution()\n}\n`,
 };
 
 function InterviewSessionContent() {
@@ -134,7 +134,7 @@ function InterviewSessionContent() {
   const rolesRaw = searchParams.get('roles') || searchParams.get('role') || user?.targetRole || 'Full Stack Developer';
   const roles = rolesRaw.split(',').map(r => decodeURIComponent(r.trim())).filter(Boolean);
   const role = roles[0]; // primary role for display / legacy compat
-  const type = (searchParams.get('type') || 'full') as 'full' | 'dsa' | 'behavioral' | 'system_design';
+  const type = (searchParams.get('type') || 'full') as 'full' | 'dsa' | 'behavioral' | 'system_design' | 'avatar';
   const difficulty = searchParams.get('difficulty') || 'medium';
 
   // Build available languages from all selected roles, deduplicated, primary role first
@@ -261,7 +261,7 @@ function InterviewSessionContent() {
   const startSession = () => {
     setShowFullscreenPrompt(false);
     document.documentElement.requestFullscreen?.().catch(() => { });
-    setPhase(type === 'system_design' ? 'voice' : 'coding');
+    setPhase((type === 'system_design' || type === 'avatar' || type === 'behavioral') ? 'voice' : 'coding');
     setAiTyping(true);
     const q = questions[0];
     const skillMention = skills.length > 0 ? ` I can see from your resume that you have experience with ${skills.slice(0, 3).join(', ')} — I'll tailor my questions accordingly.` : '';
@@ -485,9 +485,9 @@ function InterviewSessionContent() {
         });
         const data = await res.json();
         if (data.success) {
-          aiTechnical   = data.codeQuality;
+          aiTechnical = data.codeQuality;
           aiOptimization = data.optimizationScore;
-          aiCorrectness  = data.correctness;
+          aiCorrectness = data.correctness;
           setComplexityResult(data);
         }
       } catch { /* fall through */ }
@@ -495,16 +495,16 @@ function InterviewSessionContent() {
 
     // ── Derive final scores from real data ────────────────────────────────────
     const answersGiven = messages.filter(m => m.role === 'user').length;
-    const commScore    = scores.communication  > 0 ? scores.communication  : Math.min(85, 45 + answersGiven * 10);
-    const psScore      = scores.problemSolving > 0 ? scores.problemSolving  : Math.min(80, 40 + answersGiven * 8);
-    const techScore    = aiTechnical   ?? (hasCode ? 55 : 30);
-    const optScore     = aiOptimization ?? (hasCode ? 50 : 28);
+    const commScore = scores.communication > 0 ? scores.communication : Math.min(85, 45 + answersGiven * 10);
+    const psScore = scores.problemSolving > 0 ? scores.problemSolving : Math.min(80, 40 + answersGiven * 8);
+    const techScore = aiTechnical ?? (hasCode ? 55 : 30);
+    const optScore = aiOptimization ?? (hasCode ? 50 : 28);
 
     const finalScores = {
-      technical:      techScore,
+      technical: techScore,
       problemSolving: psScore + (aiCorrectness != null ? Math.round(aiCorrectness * 0.1) : 0),
-      communication:  commScore,
-      optimization:   optScore,
+      communication: commScore,
+      optimization: optScore,
     };
 
     setScores(finalScores);
@@ -571,7 +571,7 @@ function InterviewSessionContent() {
       </div>
       <div className="loading-spinner" style={{ width: 48, height: 48 }} />
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontWeight: 700, color: 'white', fontSize: '1.1rem', marginBottom: 8 }}>{loadingMsg}</div>
+        <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: 8 }}>{loadingMsg}</div>
         <div style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>
           {skills.length > 0 ? `Personalizing for: ${skills.slice(0, 4).join(', ')}${skills.length > 4 ? '...' : ''}` : 'Preparing interview questions...'}
         </div>
@@ -585,7 +585,7 @@ function InterviewSessionContent() {
       <div style={{ width: 64, height: 64, borderRadius: 18, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
         <Brain size={32} color="white" />
       </div>
-      <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 12 }}>AI Interview Session</h1>
+      <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>AI Interview Session</h1>
       <p style={{ color: 'var(--text-secondary)', maxWidth: 520, lineHeight: 1.7, marginBottom: 8 }}>
         Roles: <strong style={{ color: '#a78bfa' }}>{roles.join(', ')}</strong> • Type: <strong style={{ color: '#22d3ee' }}>{type}</strong> • Difficulty: <strong style={{ color: ({ easy: '#34d399', medium: '#fbbf24', hard: '#f87171' } as any)[difficulty] }}>{difficulty}</strong>
       </p>
@@ -609,7 +609,7 @@ function InterviewSessionContent() {
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden' }}>
       {showWarning && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: 'rgba(239,68,68,0.95)', color: 'white', padding: '14px 24px', fontWeight: 700, textAlign: 'center', fontSize: '0.95rem' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: 'rgba(239,68,68,0.95)', color: 'var(--text-primary)', padding: '14px 24px', fontWeight: 700, textAlign: 'center', fontSize: '0.95rem' }}>
           🚨 Tab switch detected! Your session is being AUTO-SUBMITTED due to anti-cheat policy.
         </div>
       )}
@@ -619,7 +619,7 @@ function InterviewSessionContent() {
         {/* Left: branding + roles */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', minWidth: 0 }}>
           <div className="pulse-dot" />
-          <span style={{ fontWeight: 700, color: 'white', fontSize: '0.88rem', whiteSpace: 'nowrap' }}>AI Interview</span>
+          <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.88rem', whiteSpace: 'nowrap' }}>AI Interview</span>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
             {roles.map((r, i) => <span key={i} className="badge badge-purple" style={{ fontSize: '0.68rem' }}>{r}</span>)}
           </div>
@@ -627,7 +627,7 @@ function InterviewSessionContent() {
         </div>
 
         {/* Centre: Language selector (only shown for coding phases) */}
-        {(phase === 'coding' || phase === 'followup' || phase === 'voice') && type !== 'system_design' && (
+        {(phase === 'coding' || phase === 'followup' || phase === 'voice') && (type !== 'system_design' && type !== 'avatar' && type !== 'behavioral') && (
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <button
               onClick={() => setShowLangDropdown(v => !v)}
@@ -686,7 +686,7 @@ function InterviewSessionContent() {
       </div>
 
       {/* Main layout */}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: type === 'system_design' && phase !== 'complete' ? '1fr' : '390px 1fr', overflow: 'hidden' }}>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: (type === 'system_design' || type === 'behavioral') && phase !== 'complete' ? '1fr' : '390px 1fr', overflow: 'hidden' }}>
         {/* Left: AI Chat */}
         <div style={{ borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
           <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -694,7 +694,7 @@ function InterviewSessionContent() {
               <Brain size={18} color="white" />
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, color: 'white', fontSize: '0.85rem' }}>Gemini AI Interviewer</div>
+              <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.85rem' }}>Gemini AI Interviewer</div>
               <div style={{ fontSize: '0.7rem', color: 'var(--accent-green)', display: 'flex', alignItems: 'center', gap: 4 }}>
                 <div className="pulse-dot" style={{ width: 5, height: 5 }} /> Live
               </div>
@@ -748,7 +748,7 @@ function InterviewSessionContent() {
                     <button onClick={toggleVoice} style={{ width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer', flexShrink: 0, background: isRecording ? 'rgba(239,68,68,0.2)' : 'rgba(124,58,237,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {isRecording ? <MicOff size={16} color="#f87171" /> : <Mic size={16} color="#a78bfa" />}
                     </button>
-                    <textarea value={userInput} onChange={e => setUserInput(e.target.value)} placeholder="Type or speak your answer..." style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 10, padding: '10px 12px', color: 'white', fontSize: '0.82rem', resize: 'none', fontFamily: 'Inter, sans-serif', outline: 'none', height: 40, lineHeight: '20px' }} />
+                    <textarea value={userInput} onChange={e => setUserInput(e.target.value)} placeholder="Type or speak your answer..." style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 10, padding: '10px 12px', color: 'var(--text-primary)', fontSize: '0.82rem', resize: 'none', fontFamily: 'Inter, sans-serif', outline: 'none', height: 40, lineHeight: '20px' }} />
                     <button onClick={() => submitAnswer(userInput || transcript)} className="btn-primary" style={{ width: 40, height: 40, padding: 0, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <Send size={15} />
                     </button>
@@ -770,17 +770,17 @@ function InterviewSessionContent() {
           )}
         </div>
 
-        {/* Right: Code editor / Results */}
-          <div style={{ display: type === 'system_design' && phase !== 'complete' ? 'none' : 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Right: Code editor / Results / Avatar */}
+        <div style={{ display: (type === 'system_design' || type === 'behavioral') && phase !== 'complete' ? 'none' : 'flex', flexDirection: 'column', overflow: 'hidden', background: type === 'avatar' ? 'var(--bg-card)' : 'transparent', alignItems: type === 'avatar' ? 'center' : 'stretch', justifyContent: type === 'avatar' ? 'center' : 'flex-start' }}>
           {phase === 'complete' ? (
             <div style={{ flex: 1, overflowY: 'auto', padding: '36px' }}>
               <div style={{ maxWidth: 680, margin: '0 auto' }}>
-                <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', marginBottom: 6, textAlign: 'center' }}>🎉 Interview Complete</h2>
+                <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6, textAlign: 'center' }}>🎉 Interview Complete</h2>
                 <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 32 }}>Your detailed performance breakdown</p>
                 <div style={{ textAlign: 'center', marginBottom: 32 }}>
                   <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--glow-purple)' }}>
                     <div>
-                      <div style={{ fontSize: '2.4rem', fontWeight: 900, color: 'white', lineHeight: 1 }}>{overall}</div>
+                      <div style={{ fontSize: '2.4rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>{overall}</div>
                       <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>/ 100</div>
                     </div>
                   </div>
@@ -789,7 +789,7 @@ function InterviewSessionContent() {
                   </div>
                 </div>
                 <div className="card-no-hover" style={{ padding: 24, marginBottom: 20 }}>
-                  <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 18, fontSize: '0.95rem' }}>Score Breakdown</h3>
+                  <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 18, fontSize: '0.95rem' }}>Score Breakdown</h3>
                   {[
                     { label: 'Technical', score: scores.technical, weight: '40%', color: '#a78bfa' },
                     { label: 'Problem Solving', score: scores.problemSolving, weight: '25%', color: '#22d3ee' },
@@ -798,7 +798,7 @@ function InterviewSessionContent() {
                   ].map(({ label, score, weight, color }) => (
                     <div key={label} style={{ marginBottom: 16 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.85rem' }}>
-                        <span style={{ color: 'white', fontWeight: 600 }}>{label} <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({weight})</span></span>
+                        <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{label} <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({weight})</span></span>
                         <span style={{ fontWeight: 800, color }}>{score}%</span>
                       </div>
                       <div className="progress-bar"><div className="progress-fill" style={{ width: `${score}%`, background: color }} /></div>
@@ -809,6 +809,28 @@ function InterviewSessionContent() {
                   <button className="btn-primary" onClick={() => router.push('/interview/ai')} style={{ flex: 1, padding: '14px' }}>New Interview</button>
                   <button className="btn-secondary" onClick={() => router.push('/dashboard')} style={{ flex: 1, padding: '14px' }}>Dashboard</button>
                 </div>
+              </div>
+            </div>
+          ) : type === 'avatar' ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30 }}>
+              <div style={{
+                width: 250, height: 250, borderRadius: '50%', background: 'rgba(124,58,237,0.1)',
+                border: '2px solid rgba(124,58,237,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: aiTyping ? '0 0 40px rgba(124,58,237,0.4)' : '0 0 10px rgba(124,58,237,0.1)',
+                transition: 'all 0.3s ease', animation: aiTyping ? 'pulse 2s infinite' : 'none'
+              }}>
+                <Users size={100} color="#a78bfa" style={{ opacity: aiTyping ? 1 : 0.7, transform: aiTyping ? 'scale(1.05)' : 'scale(1)', transition: 'all 0.3s ease' }} />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Arjun</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>HR Director AI</p>
+                {aiTyping && (
+                  <div style={{ marginTop: 20, display: 'flex', gap: 6, justifyContent: 'center' }}>
+                    <div className="typing-dot" style={{ background: '#a78bfa', width: 8, height: 8 }} />
+                    <div className="typing-dot" style={{ background: '#a78bfa', width: 8, height: 8, animationDelay: '0.2s' }} />
+                    <div className="typing-dot" style={{ background: '#a78bfa', width: 8, height: 8, animationDelay: '0.4s' }} />
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -951,7 +973,7 @@ function InterviewSessionContent() {
 
 export default function InterviewSessionPage() {
   return (
-    <Suspense fallback={<div style={{ height: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>Loading session...</div>}>
+    <Suspense fallback={<div style={{ height: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)' }}>Loading session...</div>}>
       <InterviewSessionContent />
     </Suspense>
   );

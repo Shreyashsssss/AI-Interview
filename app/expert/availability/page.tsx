@@ -42,7 +42,7 @@ export default function AvailabilityPage() {
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Manage Availability</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Manage Availability</h1>
               <p style={{ color: 'var(--text-secondary)' }}>Toggle your available slots for the next 3 days. Students will see green slots for booking.</p>
             </div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -72,7 +72,7 @@ export default function AvailabilityPage() {
             {NEXT_3_DAYS.map(({ date, label }) => (
               <div key={date} style={{ border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
                 <div style={{ padding: '16px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ fontWeight: 700, color: 'white', fontSize: '0.9rem' }}>{label}</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.9rem' }}>{label}</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--accent-green)', marginTop: 4 }}>
                     {availability[date]?.size || 0} slots available
                   </div>

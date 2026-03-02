@@ -60,7 +60,7 @@ export default function AnalyticsPage() {
       <main className="main-content" style={{ padding: '32px 36px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ marginBottom: 32 }}>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>📊 Performance Analytics</h1>
+            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>📊 Performance Analytics</h1>
             <p style={{ color: 'var(--text-secondary)' }}>Your complete learning & readiness analytics — personalized improvement roadmap</p>
           </div>
 
@@ -85,7 +85,7 @@ export default function AnalyticsPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 24 }}>
             {/* Radar chart */}
             <div className="card-no-hover" style={{ padding: 28 }}>
-              <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>🕸 Skill Web — Overall Performance</h3>
+              <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>🕸 Skill Web — Overall Performance</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <RadarChart data={RADAR_DATA}>
                   <PolarGrid stroke="#1e1e3a" />
@@ -97,7 +97,7 @@ export default function AnalyticsPage() {
 
             {/* Score trend */}
             <div className="card-no-hover" style={{ padding: 28 }}>
-              <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>📈 Interview Score Trend</h3>
+              <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>📈 Interview Score Trend</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <AreaChart data={TREND_DATA}>
                   <defs>
@@ -118,7 +118,7 @@ export default function AnalyticsPage() {
 
           {/* Section breakdown */}
           <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
-            <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>📋 Section-wise Accuracy</h3>
+            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>📋 Section-wise Accuracy</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {[
                 { label: 'Logical Reasoning', best: 91, avg: 85, attempts: 6, color: '#22d3ee', trend: '+8%' },
@@ -129,7 +129,7 @@ export default function AnalyticsPage() {
                 { label: 'Optimization Thinking', best: 75, avg: 68, attempts: 12, color: '#ec4899', trend: '+9%' },
               ].map(({ label, best, avg, attempts, color, trend }) => (
                 <div key={label} style={{ display: 'grid', gridTemplateColumns: '220px 1fr 80px 70px 60px', gap: 16, alignItems: 'center' }}>
-                  <span style={{ color: 'white', fontWeight: 600, fontSize: '0.88rem' }}>{label}</span>
+                  <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.88rem' }}>{label}</span>
                   <div>
                     <div className="progress-bar">
                       <div className="progress-fill" style={{ width: `${avg}%`, background: color }} />
@@ -146,14 +146,14 @@ export default function AnalyticsPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
             {/* Weak areas */}
             <div className="card-no-hover" style={{ padding: 28 }}>
-              <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <AlertTriangle size={18} color="#f59e0b" /> Identified Weak Areas
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {WEAK_AREAS.map(({ area, reason, priority }) => (
                   <div key={area} style={{ padding: '14px', borderRadius: 10, border: `1px solid ${priority === 'High' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, background: priority === 'High' ? 'rgba(239,68,68,0.06)' : 'rgba(245,158,11,0.06)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontWeight: 700, color: 'white', fontSize: '0.88rem' }}>{area}</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.88rem' }}>{area}</span>
                       <span className={`badge ${priority === 'High' ? 'badge-red' : 'badge-orange'}`} style={{ fontSize: '0.7rem' }}>{priority}</span>
                     </div>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{reason}</p>
@@ -164,13 +164,13 @@ export default function AnalyticsPage() {
 
             {/* AI Recommendations */}
             <div className="card-no-hover" style={{ padding: 28 }}>
-              <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Brain size={18} color="var(--accent-purple)" /> AI Improvement Plan
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {RECOMMENDATIONS.map((rec, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.72rem', color: 'white', flexShrink: 0, marginTop: 1 }}>
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.72rem', color: 'var(--text-primary)', flexShrink: 0, marginTop: 1 }}>
                       {i + 1}
                     </div>
                     <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{rec}</p>

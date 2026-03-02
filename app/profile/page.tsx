@@ -142,7 +142,7 @@ export default function ProfilePage() {
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>My Profile</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>My Profile</h1>
               <p style={{ color: 'var(--text-secondary)' }}>Your data powers personalized AI interviews and job recommendations</p>
             </div>
             <button className="btn-primary" onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -153,11 +153,11 @@ export default function ProfilePage() {
 
           {/* Avatar & Basic */}
           <div className="card-no-hover" style={{ padding: 32, marginBottom: 24 }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
               <User size={18} color="var(--accent-purple)" /> Basic Information
             </h2>
             <div style={{ display: 'flex', gap: 24, marginBottom: 24 }}>
-              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 700, color: 'white', flexShrink: 0 }}>
+              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text-primary)', flexShrink: 0 }}>
                 {form.name.split(' ').map(n => n[0]).join('').slice(0, 2) || 'U'}
               </div>
               <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -179,7 +179,7 @@ export default function ProfilePage() {
 
           {/* Education */}
           <div className="card-no-hover" style={{ padding: 32, marginBottom: 24 }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
               <GraduationCap size={18} color="var(--accent-cyan)" /> Education & Career
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
@@ -212,7 +212,7 @@ export default function ProfilePage() {
             {/* Decorative gradient line at top */}
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--gradient-secondary)' }} />
 
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
               <FileText size={18} color="var(--accent-cyan)" /> Resume Upload & AI Analysis
             </h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 20 }}>
@@ -241,7 +241,7 @@ export default function ProfilePage() {
                   <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(6,182,212,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Loader2 size={26} color="#22d3ee" style={{ animation: 'spin 1s linear infinite' }} />
                   </div>
-                  <div style={{ fontWeight: 700, color: 'white', fontSize: '1rem' }}>Analyzing Resume with AI...</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem' }}>Analyzing Resume with AI...</div>
                   <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Extracting skills, experience, and building your profile</div>
                   <div style={{ width: 200, height: 4, borderRadius: 2, background: 'var(--border)', overflow: 'hidden', marginTop: 4 }}>
                     <div style={{ height: '100%', background: 'var(--gradient-secondary)', borderRadius: 2, animation: 'progressPulse 1.5s ease-in-out infinite' }} />
@@ -262,7 +262,7 @@ export default function ProfilePage() {
                   <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(124,58,237,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Upload size={26} color="var(--accent-purple)" />
                   </div>
-                  <div style={{ fontWeight: 700, color: 'white', fontSize: '1.05rem' }}>Upload Resume (PDF)</div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.05rem' }}>Upload Resume (PDF)</div>
                   <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', maxWidth: 400, lineHeight: 1.6 }}>
                     AI will extract your skills, experience, projects, and personalize interview questions.
                     <br />Max 5MB • PDF format only
@@ -312,7 +312,7 @@ export default function ProfilePage() {
                 {/* AI Analysis Header */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                   <Brain size={18} color="var(--accent-purple)" />
-                  <span style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>AI Resume Analysis</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>AI Resume Analysis</span>
                   <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>
                     {resumeData.seniorityLevel}
                   </span>
@@ -351,7 +351,7 @@ export default function ProfilePage() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {Object.entries(resumeData.skillCategories).map(([category, skills]) => (
                         <div key={category} style={{ padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--bg-secondary)' }}>
-                          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'white', marginBottom: 8 }}>{category}</div>
+                          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>{category}</div>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                             {(skills as string[]).map((skill: string) => (
                               <span key={skill} className="badge badge-purple" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
@@ -417,7 +417,7 @@ export default function ProfilePage() {
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 }}>
                   <div>
-                    <div style={{ fontWeight: 600, color: 'white', fontSize: '0.88rem' }}>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.88rem' }}>
                       ✨ Resume-powered interview ready!
                     </div>
                     <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 2 }}>
@@ -439,7 +439,7 @@ export default function ProfilePage() {
 
           {/* Skills */}
           <div className="card-no-hover" style={{ padding: 32, marginBottom: 24 }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Briefcase size={18} color="var(--accent-orange)" /> Technical Skills
             </h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 20 }}>
@@ -485,7 +485,7 @@ export default function ProfilePage() {
 
           {/* Social links */}
           <div className="card-no-hover" style={{ padding: 32, marginBottom: 24 }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Github size={18} color="var(--text-secondary)" /> Links
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>

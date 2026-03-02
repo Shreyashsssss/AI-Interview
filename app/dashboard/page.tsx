@@ -52,7 +52,7 @@ export default function DashboardPage() {
         <div style={{ marginBottom: 36 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <h1 style={{ fontSize: '1.9rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>
+              <h1 style={{ fontSize: '1.9rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>
                 Good morning, {user.name.split(' ')[0]}! 👋
               </h1>
               <p style={{ color: 'var(--text-secondary)' }}>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <AlertCircle size={20} color="#a78bfa" />
-              <span style={{ color: 'white', fontWeight: 600 }}>Complete your profile to unlock personalized AI interviews</span>
+              <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Complete your profile to unlock personalized AI interviews</span>
             </div>
             <button className="btn-primary" onClick={() => router.push('/profile')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
               Complete Profile <ArrowRight size={14} style={{ display: 'inline', marginLeft: 4 }} />
@@ -98,7 +98,7 @@ export default function DashboardPage() {
               <div className="stat-box-icon" style={{ background: bg, border: `1px solid ${color}30` }}>
                 <Icon size={22} color={color} />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6, fontWeight: 500 }}>{label}</div>
               <div style={{ fontSize: '0.75rem', color, marginTop: 4, fontWeight: 600 }}>{change}</div>
             </div>
@@ -112,7 +112,7 @@ export default function DashboardPage() {
             <div className="card-no-hover" style={{ padding: 28 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>🎯 Recommended Job Roles</h2>
+                  <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>🎯 Recommended Job Roles</h2>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 4 }}>Based on your aptitude scores & resume skills</p>
                 </div>
                 <Target size={20} color="var(--accent-purple)" />
@@ -127,8 +127,8 @@ export default function DashboardPage() {
                   }} onClick={() => router.push('/interview/ai')}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        {i === 0 && <span style={{ fontSize: '0.7rem', background: 'var(--gradient-primary)', color: 'white', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>BEST MATCH</span>}
-                        <span style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>{role}</span>
+                        {i === 0 && <span style={{ fontSize: '0.7rem', background: 'var(--gradient-primary)', color: 'var(--text-primary)', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>BEST MATCH</span>}
+                        <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{role}</span>
                       </div>
                       <div style={{ fontWeight: 800, fontSize: '1.1rem', color: i === 0 ? '#a78bfa' : 'var(--text-secondary)' }}>{match}%</div>
                     </div>
@@ -149,7 +149,7 @@ export default function DashboardPage() {
             {/* Aptitude overview */}
             <div className="card-no-hover" style={{ padding: 28 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>📊 Aptitude Performance</h2>
+                <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>📊 Aptitude Performance</h2>
                 <button onClick={() => router.push('/aptitude')} style={{ background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
                   View All <ChevronRight size={14} />
                 </button>
@@ -162,7 +162,7 @@ export default function DashboardPage() {
                 <div key={section} style={{ marginBottom: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                     <div>
-                      <span style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem' }}>{section}</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.9rem' }}>{section}</span>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: 8 }}>{attempts} attempts</span>
                     </div>
                     <span style={{ fontWeight: 800, color }}>{score}%</span>
@@ -182,7 +182,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {/* Recent activity */}
             <div className="card-no-hover" style={{ padding: 24 }}>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Activity size={18} color="var(--accent-cyan)" /> Recent Activity
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                       <Icon size={16} color={color} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '0.82rem', color: 'white', fontWeight: 500, marginBottom: 3, lineHeight: 1.4 }}>{text}</div>
+                      <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 500, marginBottom: 3, lineHeight: 1.4 }}>{text}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{time}</div>
                     </div>
                     {score && <span className="badge badge-green" style={{ fontSize: '0.7rem', flexShrink: 0 }}>{score}</span>}
@@ -203,7 +203,7 @@ export default function DashboardPage() {
 
             {/* Quick actions */}
             <div className="card-no-hover" style={{ padding: 24 }}>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 16 }}>⚡ Quick Actions</h2>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>⚡ Quick Actions</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
                   { label: 'HR Avatar Interview', desc: 'Immersive AI HR Mode', color: '#ec4899', href: '/interview/ai' },
@@ -222,7 +222,7 @@ export default function DashboardPage() {
                     onMouseOut={e => (e.currentTarget.style.background = 'transparent')}
                   >
                     <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontWeight: 600, color: 'white', fontSize: '0.85rem' }}>{label}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.85rem' }}>{label}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{desc}</div>
                     </div>
                     <ChevronRight size={16} color={color} />

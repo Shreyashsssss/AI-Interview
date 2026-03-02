@@ -132,7 +132,7 @@ export default function QuizPage() {
           <div style={{ fontSize: '3rem', marginBottom: 16 }}>
             {section === 'quantitative' ? '🔢' : section === 'logical' ? '🧩' : '📝'}
           </div>
-          <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'white', marginBottom: 8 }}>{titles[section]}</h1>
+          <h1 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>{titles[section]}</h1>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>
             {questions.length} questions • {TOTAL_TIME / 60} minutes • No negative marking
           </p>
@@ -143,7 +143,7 @@ export default function QuizPage() {
               { label: 'Marks', val: `${questions.length}/0` },
             ].map(({ label, val }) => (
               <div key={label} style={{ background: 'var(--bg-secondary)', borderRadius: 10, padding: '16px', border: '1px solid var(--border)' }}>
-                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>{val}</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>{val}</div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
@@ -195,7 +195,7 @@ export default function QuizPage() {
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
             <div style={{ fontSize: '3rem', marginBottom: 12 }}>{accuracy >= 80 ? '🏆' : accuracy >= 60 ? '👍' : '📚'}</div>
-            <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Quiz Complete!</h1>
+            <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Quiz Complete!</h1>
             <p style={{ color: 'var(--text-secondary)' }}>{titles[section]} Results</p>
           </div>
 
@@ -222,7 +222,7 @@ export default function QuizPage() {
 
           {/* Q&A Review */}
           <div className="card-no-hover" style={{ padding: 28 }}>
-            <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1.05rem' }}>Question Review</h2>
+            <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1.05rem' }}>Question Review</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {questions.map((q, i) => {
                 const isCorrect = answers[i] === q.answer;
@@ -230,7 +230,7 @@ export default function QuizPage() {
                   <div key={i} style={{ padding: '18px', borderRadius: 12, border: `1px solid ${isCorrect ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`, background: isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)' }}>
                     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
                       {isCorrect ? <CheckCircle size={18} color="#34d399" style={{ flexShrink: 0, marginTop: 2 }} /> : <XCircle size={18} color="#f87171" style={{ flexShrink: 0, marginTop: 2 }} />}
-                      <div style={{ fontSize: '0.9rem', color: 'white', fontWeight: 500, lineHeight: 1.5 }}>Q{i + 1}. {q.question}</div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>Q{i + 1}. {q.question}</div>
                     </div>
                     <div style={{ paddingLeft: 28, fontSize: '0.82rem' }}>
                       <div style={{ color: '#34d399', marginBottom: 4 }}>✓ Correct: {q.options[q.answer]}</div>
@@ -267,14 +267,14 @@ export default function QuizPage() {
       <main className="main-content" style={{ padding: '24px 28px' }}>
         {/* Auto-Submit Notification */}
         {showAutoSubmitNotification && (
-          <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #f87171 0%, #e11d48 100%)', color: 'white', padding: '18px 28px', borderRadius: 12, boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: 9999, maxWidth: 500, textAlign: 'center' }}>
+          <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #f87171 0%, #e11d48 100%)', color: 'var(--text-primary)', padding: '18px 28px', borderRadius: 12, boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: 9999, maxWidth: 500, textAlign: 'center' }}>
             <div style={{ fontWeight: 700, fontSize: '1.0rem', marginBottom: 4 }}>🚨 Window Changed - Quiz Auto-Submitted</div>
             <div style={{ fontSize: '0.9rem', opacity: 0.95 }}>Your answers have been saved. Switching tabs triggered automatic submission.</div>
           </div>
         )}
         {/* Top bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, padding: '14px 20px', background: 'var(--bg-card)', borderRadius: 14, border: '1px solid var(--border)' }}>
-          <div style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>{titles[section]}</div>
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{titles[section]}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
               Q {current + 1}/{questions.length}
@@ -300,10 +300,10 @@ export default function QuizPage() {
           <div className="card-no-hover" style={{ padding: 32 }}>
             {/* Question */}
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 28 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', color: 'white', flexShrink: 0 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-primary)', flexShrink: 0 }}>
                 {current + 1}
               </div>
-              <p style={{ fontSize: '1.05rem', color: 'white', lineHeight: 1.7, fontWeight: 500 }}>{q.question}</p>
+              <p style={{ fontSize: '1.05rem', color: 'var(--text-primary)', lineHeight: 1.7, fontWeight: 500 }}>{q.question}</p>
             </div>
 
             {/* Options */}
@@ -353,7 +353,7 @@ export default function QuizPage() {
 
           {/* Question grid navigator */}
           <div className="card-no-hover" style={{ padding: 20 }}>
-            <div style={{ fontWeight: 700, color: 'white', fontSize: '0.85rem', marginBottom: 16 }}>Questions</div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.85rem', marginBottom: 16 }}>Questions</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, marginBottom: 20 }}>
               {questions.map((_, i) => {
                 const ans = answers[i] !== null;

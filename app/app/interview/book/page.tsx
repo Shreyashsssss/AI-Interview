@@ -200,9 +200,9 @@ export default function BookInterviewPage() {
           <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(245,158,11,0.2)', border: '2px solid rgba(245,158,11,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
             <Clock size={36} color="#f59e0b" />
           </div>
-          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', marginBottom: 8 }}>Booking Submitted! ⏳</h2>
+          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Booking Submitted! ⏳</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.7 }}>
-            Your mock interview request with <strong style={{ color: 'white' }}>{expert?.name}</strong> from <strong style={{ color: '#a78bfa' }}>{expert?.company}</strong> has been sent.
+            Your mock interview request with <strong style={{ color: 'var(--text-primary)' }}>{expert?.name}</strong> from <strong style={{ color: '#a78bfa' }}>{expert?.company}</strong> has been sent.
           </p>
           <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 12, padding: '14px 20px', marginBottom: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
@@ -246,7 +246,7 @@ export default function BookInterviewPage() {
         <div style={{ maxWidth: 920, margin: '0 auto' }}>
           {/* Header */}
           <div style={{ marginBottom: 32 }}>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Book Expert Mock Interview</h1>
+            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Book Expert Mock Interview</h1>
             <p style={{ color: 'var(--text-secondary)' }}>Connect with verified industry professionals for personalized mock interviews</p>
           </div>
 
@@ -278,7 +278,7 @@ export default function BookInterviewPage() {
           {/* Step 1: Role */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1.05rem' }}>What role are you preparing for?</h2>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1.05rem' }}>What role are you preparing for?</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
                 {JOB_ROLES.map(role => (
                   <button key={role} onClick={() => { setSelectedRole(role); setSelectedExpert(''); }} style={{
@@ -303,7 +303,7 @@ export default function BookInterviewPage() {
           {/* Step 2: Expert */}
           {step === 2 && (
             <div>
-              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '1.05rem' }}>Available experts for <span style={{ color: '#a78bfa' }}>{selectedRole}</span></h2>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '1.05rem' }}>Available experts for <span style={{ color: '#a78bfa' }}>{selectedRole}</span></h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
                 {availableExperts.map((exp) => (
                   <button key={exp.id} onClick={() => setSelectedExpert(exp.id)} style={{
@@ -316,7 +316,7 @@ export default function BookInterviewPage() {
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                        <span style={{ fontWeight: 700, color: 'white', fontSize: '1rem' }}>{exp.name}</span>
+                        <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem' }}>{exp.name}</span>
                         <span className="badge badge-blue" style={{ fontSize: '0.72rem' }}>{exp.designation}</span>
                         <span style={{ fontSize: '0.78rem', color: '#a78bfa', fontWeight: 600 }}>{exp.company}</span>
                       </div>
@@ -349,7 +349,7 @@ export default function BookInterviewPage() {
           {/* Step 3: Schedule */}
           {step === 3 && (
             <div>
-              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 8, fontSize: '1.05rem' }}>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8, fontSize: '1.05rem' }}>
                 Select date & time with <span style={{ color: '#a78bfa' }}>{expert?.name}</span>
               </h2>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 24 }}>Showing next 3 days of availability</p>
@@ -357,7 +357,7 @@ export default function BookInterviewPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28 }}>
                 {NEXT_3_DAYS.map(({ date, label }) => (
                   <div key={date} style={{ border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
-                    <div style={{ padding: '14px 16px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', fontWeight: 700, color: 'white', fontSize: '0.88rem' }}>{label}</div>
+                    <div style={{ padding: '14px 16px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.88rem' }}>{label}</div>
                     <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                       {TIME_SLOTS.map((time, i) => {
                         const expired = isSlotExpired(date, time);
@@ -419,14 +419,14 @@ export default function BookInterviewPage() {
           {/* Step 4: Confirm */}
           {step === 4 && expert && (
             <div style={{ maxWidth: 600 }}>
-              <h2 style={{ fontWeight: 700, color: 'white', marginBottom: 24, fontSize: '1.05rem' }}>Confirm your booking</h2>
+              <h2 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24, fontSize: '1.05rem' }}>Confirm your booking</h2>
               <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
                 <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 24, paddingBottom: 24, borderBottom: '1px solid var(--border)' }}>
                   <div style={{ width: 52, height: 52, borderRadius: '50%', background: `${expert.color}25`, border: `2px solid ${expert.color}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: expert.color, flexShrink: 0 }}>
                     {expert.avatar}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 700, color: 'white', fontSize: '1rem' }}>{expert.name}</div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem' }}>{expert.name}</div>
                     <div style={{ fontSize: '0.82rem', color: '#a78bfa' }}>{expert.designation} @ {expert.company}</div>
                   </div>
                 </div>
@@ -439,7 +439,7 @@ export default function BookInterviewPage() {
                 ].map(({ label, val, icon }) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{icon} {label}</span>
-                    <span style={{ color: 'white', fontWeight: 600, fontSize: '0.88rem' }}>{val}</span>
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.88rem' }}>{val}</span>
                   </div>
                 ))}
                 <div style={{ marginTop: 20, padding: '14px', borderRadius: 10, background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)' }}>

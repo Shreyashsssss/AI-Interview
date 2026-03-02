@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   Brain, LayoutDashboard, BookOpen, Code2, Users, BarChart3,
   User, LogOut, ChevronRight, Zap, Settings, Bell
@@ -43,7 +44,7 @@ export default function Sidebar() {
             <Brain size={20} color="white" />
           </div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'white' }}>Place<span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>AI</span></div>
+            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-primary)' }}>Place<span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>AI</span></div>
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 500 }}>Placement Platform</div>
           </div>
         </div>
@@ -52,11 +53,11 @@ export default function Sidebar() {
       {/* User profile card */}
       <div style={{ padding: '16px 12px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px', borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
-          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'white', flexShrink: 0 }}>
+          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', flexShrink: 0 }}>
             {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
           </div>
           <div style={{ flex: 1, overflow: 'hidden' }}>
-            <div style={{ fontWeight: 600, color: 'white', fontSize: '0.85rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
+            <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.85rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
             <div style={{ fontSize: '0.72rem', fontWeight: 600, color: roleColor }}>{roleLabel}</div>
           </div>
           <div className="pulse-dot" />
@@ -79,6 +80,7 @@ export default function Sidebar() {
 
       {/* Bottom actions */}
       <div style={{ padding: '12px', borderTop: '1px solid var(--border)' }}>
+        <ThemeToggle />
         <button className="sidebar-link" style={{ color: 'var(--accent-red)', width: '100%' }} onClick={() => { logout(); router.push('/'); }}>
           <LogOut size={18} />
           <span>Sign Out</span>

@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import Sidebar from '@/components/Sidebar';
 import {
   Brain, Code2, BookOpen, Calendar, TrendingUp, Target, Star, Clock,
-  ArrowRight, Zap, CheckCircle, AlertCircle, ChevronRight, Activity, X, XCircle, Bell, Video
+  ArrowRight, Zap, CheckCircle, AlertCircle, ChevronRight, Activity, X, XCircle, Bell, Video, Users
 } from 'lucide-react';
 
 interface Notification {
@@ -138,10 +138,10 @@ export default function DashboardPage() {
               localStorage.setItem('placeai_notifications', JSON.stringify(
                 all.map(n => n.id === unread.id ? { ...n, read: true } : n)
               ));
-            } catch {}
+            } catch { }
           }
         }
-      } catch {}
+      } catch { }
 
       // 2. Also try Supabase (merge results)
       try {
@@ -162,10 +162,10 @@ export default function DashboardPage() {
             fetch('/api/db', {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ action: 'markNotificationRead', id: unread.id }),
-            }).catch(() => {});
+            }).catch(() => { });
           }
         }
-      } catch {}
+      } catch { }
     };
 
     checkNotifications();
@@ -235,9 +235,9 @@ export default function DashboardPage() {
             <div style={{ padding: '20px 28px 28px' }}>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: 20, textAlign: 'center' }}>
                 {showPopup.type === 'approved' ? (
-                  <>Your mock interview with <strong style={{ color: 'white' }}>{showPopup.expertName}</strong> from <strong style={{ color: '#a78bfa' }}>{showPopup.expertCompany}</strong> has been approved!</>
+                  <>Your mock interview with <strong style={{ color: 'var(--text-primary)' }}>{showPopup.expertName}</strong> from <strong style={{ color: '#a78bfa' }}>{showPopup.expertCompany}</strong> has been approved!</>
                 ) : (
-                  <>Your interview request with <strong style={{ color: 'white' }}>{showPopup.expertName}</strong> from <strong style={{ color: '#a78bfa' }}>{showPopup.expertCompany}</strong> was not approved. Please try booking another slot.</>
+                  <>Your interview request with <strong style={{ color: 'var(--text-primary)' }}>{showPopup.expertName}</strong> from <strong style={{ color: '#a78bfa' }}>{showPopup.expertCompany}</strong> was not approved. Please try booking another slot.</>
                 )}
               </p>
 
@@ -251,7 +251,7 @@ export default function DashboardPage() {
                   ].map(({ label, val }) => (
                     <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', fontSize: '0.85rem' }}>
                       <span style={{ color: 'var(--text-muted)' }}>{label}</span>
-                      <span style={{ color: 'white', fontWeight: 600 }}>{val}</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{val}</span>
                     </div>
                   ))}
                 </div>
@@ -302,7 +302,7 @@ export default function DashboardPage() {
         <div style={{ marginBottom: 36 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <h1 style={{ fontSize: '1.9rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>
+              <h1 style={{ fontSize: '1.9rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>
                 Good morning, {user.name.split(' ')[0]}! 👋
               </h1>
               <p style={{ color: 'var(--text-secondary)' }}>
@@ -326,7 +326,7 @@ export default function DashboardPage() {
                       position: 'absolute', top: -4, right: -4, width: 18, height: 18,
                       borderRadius: '50%', background: '#ef4444', display: 'flex',
                       alignItems: 'center', justifyContent: 'center', fontSize: '0.65rem',
-                      fontWeight: 800, color: 'white',
+                      fontWeight: 800, color: 'var(--text-primary)',
                     }}>
                       {notifications.filter(n => !dismissedIds.has(n.id)).length}
                     </div>
@@ -334,7 +334,10 @@ export default function DashboardPage() {
                 </div>
               )}
               <button className="btn-primary" onClick={() => router.push('/interview/ai')} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Zap size={16} /> Start AI Interview
+                <Zap size={16} /> Start Tech AI Interview
+              </button>
+              <button className="btn-primary" onClick={() => router.push('/interview/ai?type=hr')} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--gradient-secondary)', border: 'none' }}>
+                <Users size={16} /> Start HR AI Interview
               </button>
               <button className="btn-secondary" onClick={() => router.push('/aptitude')} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <BookOpen size={16} /> Take Quiz
@@ -352,7 +355,7 @@ export default function DashboardPage() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <AlertCircle size={20} color="#a78bfa" />
-              <span style={{ color: 'white', fontWeight: 600 }}>Complete your profile to unlock personalized AI interviews</span>
+              <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Complete your profile to unlock personalized AI interviews</span>
             </div>
             <button className="btn-primary" onClick={() => router.push('/profile')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
               Complete Profile <ArrowRight size={14} style={{ display: 'inline', marginLeft: 4 }} />
@@ -367,7 +370,7 @@ export default function DashboardPage() {
               <div className="stat-box-icon" style={{ background: bg, border: `1px solid ${color}30` }}>
                 <Icon size={22} color={color} />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6, fontWeight: 500 }}>{label}</div>
               <div style={{ fontSize: '0.75rem', color, marginTop: 4, fontWeight: 600 }}>{change}</div>
             </div>
@@ -381,7 +384,7 @@ export default function DashboardPage() {
             <div className="card-no-hover" style={{ padding: 28 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>🎯 Recommended Job Roles</h2>
+                  <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>🎯 Recommended Job Roles</h2>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 4 }}>Based on your aptitude scores & resume skills</p>
                 </div>
                 <Target size={20} color="var(--accent-purple)" />
@@ -396,8 +399,8 @@ export default function DashboardPage() {
                   }} onClick={() => router.push('/interview/ai')}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        {i === 0 && <span style={{ fontSize: '0.7rem', background: 'var(--gradient-primary)', color: 'white', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>BEST MATCH</span>}
-                        <span style={{ fontWeight: 700, color: 'white', fontSize: '0.95rem' }}>{role}</span>
+                        {i === 0 && <span style={{ fontSize: '0.7rem', background: 'var(--gradient-primary)', color: 'var(--text-primary)', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>BEST MATCH</span>}
+                        <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{role}</span>
                       </div>
                       <div style={{ fontWeight: 800, fontSize: '1.1rem', color: i === 0 ? '#a78bfa' : 'var(--text-secondary)' }}>{match}%</div>
                     </div>
@@ -418,7 +421,7 @@ export default function DashboardPage() {
             {/* Aptitude overview */}
             <div className="card-no-hover" style={{ padding: 28 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>📊 Aptitude Performance</h2>
+                <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>📊 Aptitude Performance</h2>
                 <button onClick={() => router.push('/aptitude')} style={{ background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
                   View All <ChevronRight size={14} />
                 </button>
@@ -431,7 +434,7 @@ export default function DashboardPage() {
                 <div key={section} style={{ marginBottom: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                     <div>
-                      <span style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem' }}>{section}</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.9rem' }}>{section}</span>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: 8 }}>{attempts} attempts</span>
                     </div>
                     <span style={{ fontWeight: 800, color }}>{score}%</span>
@@ -451,7 +454,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {/* Recent activity */}
             <div className="card-no-hover" style={{ padding: 24 }}>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Activity size={18} color="var(--accent-cyan)" /> Recent Activity
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -463,7 +466,7 @@ export default function DashboardPage() {
                       <Icon size={16} color={color} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '0.82rem', color: 'white', fontWeight: 500, marginBottom: 3, lineHeight: 1.4 }}>{text}</div>
+                      <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 500, marginBottom: 3, lineHeight: 1.4 }}>{text}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{time}</div>
                     </div>
                     {score && <span className="badge badge-green" style={{ fontSize: '0.7rem', flexShrink: 0 }}>{score}</span>}
@@ -474,10 +477,11 @@ export default function DashboardPage() {
 
             {/* Quick actions */}
             <div className="card-no-hover" style={{ padding: 24 }}>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: 16 }}>⚡ Quick Actions</h2>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>⚡ Quick Actions</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
                   { label: 'Start HR Interview', desc: 'Focus on communication', color: '#f43f5e', href: '/interview/ai?type=hr' },
+                  { label: 'Live HR Tech Monitor', desc: 'Real-time AI evaluator', color: '#f59e0b', href: '/interview/live-eval' },
                   { label: 'Start Tech Interview', desc: 'DSA + Behavioral', color: '#a78bfa', href: '/interview/ai' },
                   { label: 'Take Aptitude Quiz', desc: 'Quant • Logical • Verbal', color: '#22d3ee', href: '/aptitude' },
                   { label: 'Book Expert Session', desc: 'Available today', color: '#34d399', href: '/interview/book' },
@@ -492,7 +496,7 @@ export default function DashboardPage() {
                     onMouseOut={e => (e.currentTarget.style.background = 'transparent')}
                   >
                     <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontWeight: 600, color: 'white', fontSize: '0.85rem' }}>{label}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.85rem' }}>{label}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{desc}</div>
                     </div>
                     <ChevronRight size={16} color={color} />

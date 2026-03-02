@@ -44,7 +44,7 @@ export default function RegisterPage() {
             <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Brain size={22} color="white" />
             </div>
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>Place<span className="gradient-text">AI</span></span>
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>Place<span className="gradient-text">AI</span></span>
           </div>
 
           {/* Progress */}
@@ -56,7 +56,7 @@ export default function RegisterPage() {
 
           {step === 1 ? (
             <>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Join PlaceAI</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Join PlaceAI</h1>
               <p style={{ color: 'var(--text-secondary)', marginBottom: 28, fontSize: '0.95rem' }}>Choose your role to get started</p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 32 }}>
@@ -70,7 +70,7 @@ export default function RegisterPage() {
                     cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',
                   }}>
                     <Icon size={28} color={role === r ? '#a78bfa' : 'var(--text-secondary)'} style={{ marginBottom: 10 }} />
-                    <div style={{ fontWeight: 700, color: 'white', marginBottom: 6, fontSize: '0.95rem' }}>{title}</div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6, fontSize: '0.95rem' }}>{title}</div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{desc}</div>
                   </button>
                 ))}
@@ -82,7 +82,7 @@ export default function RegisterPage() {
             </>
           ) : (
             <>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Create Account</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Create Account</h1>
               <p style={{ color: 'var(--text-secondary)', marginBottom: 28, fontSize: '0.95rem' }}>
                 Registering as <span style={{ color: '#a78bfa', fontWeight: 600 }}>{role === 'student' ? 'Student' : 'Industry Expert'}</span>
               </p>

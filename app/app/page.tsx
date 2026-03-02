@@ -139,7 +139,7 @@ export default function LandingPage() {
           }}>
             <Brain size={20} color="white" />
           </div>
-          <span style={{ fontSize: '1.3rem', fontWeight: 800, color: 'white' }}>
+          <span style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             Place<span className="gradient-text">AI</span>
           </span>
         </div>
@@ -161,7 +161,7 @@ export default function LandingPage() {
           <div className="badge badge-purple" style={{ marginBottom: 24, fontSize: '0.85rem', padding: '6px 16px' }}>
             <Zap size={14} /> AI-Powered Placement Platform
           </div>
-          <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.1, marginBottom: 24, color: 'white' }}>
+          <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.1, marginBottom: 24, color: 'var(--text-primary)' }}>
             Master Interviews with <br />
             <span className="gradient-text">Real AI Intelligence</span>
           </h1>
@@ -213,7 +213,7 @@ export default function LandingPage() {
               </div>
               {/* Main content preview */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'white', marginBottom: 12 }}>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 12 }}>
                   🤖 AI Interview Session — Full Stack Developer
                 </div>
                 <div className="chat-bubble-ai" style={{ marginBottom: 12, fontSize: '0.85rem' }}>
@@ -254,7 +254,7 @@ export default function LandingPage() {
           {STATS.map(({ value, label, icon: Icon }) => (
             <div key={label} style={{ textAlign: 'center' }}>
               <Icon size={28} style={{ color: 'var(--accent-purple)', marginBottom: 8 }} />
-              <div style={{ fontSize: '2.4rem', fontWeight: 900, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '2.4rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: 6 }}>{label}</div>
             </div>
           ))}
@@ -265,7 +265,7 @@ export default function LandingPage() {
       <section style={{ position: 'relative', zIndex: 1, padding: '80px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 60 }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'white', marginBottom: 12 }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>
               Everything you need to get <span className="gradient-text">placed</span>
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
@@ -282,7 +282,7 @@ export default function LandingPage() {
                 }}>
                   <Icon size={26} color={color} />
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: 8 }}>{title}</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>{title}</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{desc}</p>
               </div>
             ))}
@@ -294,7 +294,7 @@ export default function LandingPage() {
       <section style={{ position: 'relative', zIndex: 1, padding: '80px 40px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 60 }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'white', marginBottom: 12 }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>
               How it <span className="gradient-text">works</span>
             </h2>
           </div>
@@ -311,10 +311,10 @@ export default function LandingPage() {
                   width: 48, height: 48, borderRadius: 12, marginBottom: 16,
                   background: 'var(--gradient-primary)', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 800, fontSize: '1rem', color: 'white',
+                  fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)',
                   boxShadow: 'var(--glow-purple)',
                 }}>{step}</div>
-                <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 8, fontSize: '1rem' }}>{title}</h3>
+                <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8, fontSize: '1rem' }}>{title}</h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{desc}</p>
               </div>
             ))}
@@ -326,7 +326,7 @@ export default function LandingPage() {
       <section style={{ position: 'relative', zIndex: 1, padding: '80px 40px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 50 }}>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'white', marginBottom: 12 }}>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>
               Success <span className="gradient-text">stories</span>
             </h2>
           </div>
@@ -345,10 +345,10 @@ export default function LandingPage() {
                   <div style={{
                     width: 42, height: 42, borderRadius: '50%', background: 'var(--gradient-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontWeight: 700, fontSize: '0.85rem', color: 'white',
+                    fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)',
                   }}>{avatar}</div>
                   <div>
-                    <div style={{ fontWeight: 600, color: 'white', fontSize: '0.9rem' }}>{name}</div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.9rem' }}>{name}</div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--accent-green)' }}>{role}</div>
                   </div>
                 </div>
@@ -368,7 +368,7 @@ export default function LandingPage() {
           <div className="badge badge-purple" style={{ marginBottom: 20, fontSize: '0.85rem' }}>
             <Zap size={14} /> Limited Beta Access
           </div>
-          <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'white', marginBottom: 16 }}>
+          <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 16 }}>
             Ready to ace your <br /><span className="gradient-text">next interview?</span>
           </h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 36, fontSize: '1rem', lineHeight: 1.7 }}>
@@ -389,7 +389,7 @@ export default function LandingPage() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <Brain size={20} color="var(--accent-purple)" />
-          <span style={{ fontWeight: 700, color: 'white' }}>PlaceAI</span>
+          <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>PlaceAI</span>
         </div>
         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
           © 2026 PlaceAI. Built for placement excellence.

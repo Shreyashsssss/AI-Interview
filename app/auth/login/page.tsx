@@ -43,10 +43,10 @@ export default function LoginPage() {
             <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Brain size={22} color="white" />
             </div>
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>Place<span className="gradient-text">AI</span></span>
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>Place<span className="gradient-text">AI</span></span>
           </div>
 
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Welcome back</h1>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Welcome back</h1>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 32, fontSize: '0.95rem' }}>Sign in to continue your placement journey</p>
 
           {/* Quick login buttons */}

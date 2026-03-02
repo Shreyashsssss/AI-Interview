@@ -715,7 +715,7 @@ Estimated time complexity: ${complexity}`);
       <div style={{ width: 64, height: 64, borderRadius: 18, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
         <Brain size={32} color="white" />
       </div>
-      <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 12 }}>AI Interview Session</h1>
+      <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>AI Interview Session</h1>
       <p style={{ color: 'var(--text-secondary)', maxWidth: 480, lineHeight: 1.7, marginBottom: 8 }}>
         Role: <strong style={{ color: '#a78bfa' }}>{role}</strong> • Type: <strong style={{ color: '#22d3ee' }}>{type}</strong> • Difficulty: <strong style={{ color: { easy: '#34d399', medium: '#fbbf24', hard: '#f87171' }[difficulty] }}>{difficulty}</strong>
       </p>
@@ -745,7 +745,7 @@ Estimated time complexity: ${complexity}`);
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden' }}>
       {/* Auto-End Notification */}
       {showAutoEndNotification && (
-        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #f87171 0%, #e11d48 100%)', color: 'white', padding: '18px 28px', borderRadius: 12, boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: 9999, maxWidth: 500, textAlign: 'center' }}>
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #f87171 0%, #e11d48 100%)', color: 'var(--text-primary)', padding: '18px 28px', borderRadius: 12, boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: 9999, maxWidth: 500, textAlign: 'center' }}>
           <div style={{ fontWeight: 700, fontSize: '1.0rem', marginBottom: 4 }}>🚨 Window Changed - Interview Auto-Ended</div>
           <div style={{ fontSize: '0.9rem', opacity: 0.95 }}>Switching tabs or windows ended your interview. Your results are being submitted.</div>
         </div>
@@ -762,7 +762,7 @@ Estimated time complexity: ${complexity}`);
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div className="pulse-dot" />
-            <span style={{ fontWeight: 700, color: 'white', fontSize: '0.9rem' }}>AI Interview</span>
+            <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.9rem' }}>AI Interview</span>
           </div>
           <span className="badge badge-purple" style={{ fontSize: '0.75rem' }}>{role}</span>
           <span className="badge badge-blue" style={{ fontSize: '0.75rem' }}>{type.toUpperCase()}</span>
@@ -823,7 +823,7 @@ Estimated time complexity: ${complexity}`);
               <Brain size={20} color="white" />
             </div>
             <div>
-              <div style={{ fontWeight: 700, color: 'white', fontSize: '0.88rem' }}>AI Interviewer</div>
+              <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.88rem' }}>AI Interviewer</div>
               <div style={{ fontSize: '0.72rem', color: tts.isSpeaking ? '#a78bfa' : 'var(--accent-green)', display: 'flex', alignItems: 'center', gap: 4, transition: 'color 0.3s' }}>
                 <div className="pulse-dot" style={{ width: 6, height: 6, background: tts.isSpeaking ? '#a78bfa' : undefined }} /> {tts.isSpeaking ? '🔊 Speaking...' : 'Online'}
               </div>
@@ -930,7 +930,7 @@ Estimated time complexity: ${complexity}`);
                   placeholder={phase === 'coding' ? 'Ask a question or explain your thinking...' : phase === 'voice' ? 'Explain your approach...' : 'Type your follow-up answer...'}
                   style={{
                     flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)',
-                    borderRadius: 10, padding: '9px 14px', color: 'white', fontSize: '0.82rem',
+                    borderRadius: 10, padding: '9px 14px', color: 'var(--text-primary)', fontSize: '0.82rem',
                     resize: 'none', fontFamily: 'Inter, sans-serif', outline: 'none',
                     height: 40, lineHeight: '22px', transition: 'border-color 0.2s',
                   }}
@@ -989,14 +989,14 @@ Estimated time complexity: ${complexity}`);
             // Results view
             <div style={{ flex: 1, overflowY: 'auto', padding: '36px' }}>
               <div style={{ maxWidth: 700, margin: '0 auto' }}>
-                <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', marginBottom: 6, textAlign: 'center' }}>🎉 Session Complete</h2>
+                <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6, textAlign: 'center' }}>🎉 Session Complete</h2>
                 <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 32 }}>Here's your detailed performance breakdown</p>
 
                 {/* Overall score circle */}
                 <div style={{ textAlign: 'center', marginBottom: 36 }}>
                   <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--glow-purple)' }}>
                     <div>
-                      <div style={{ fontSize: '2.4rem', fontWeight: 900, color: 'white', lineHeight: 1 }}>{overall}</div>
+                      <div style={{ fontSize: '2.4rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>{overall}</div>
                       <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>/ 100</div>
                     </div>
                   </div>
@@ -1007,7 +1007,7 @@ Estimated time complexity: ${complexity}`);
 
                 {/* Score breakdown */}
                 <div className="card-no-hover" style={{ padding: 28, marginBottom: 24 }}>
-                  <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20 }}>Score Breakdown</h3>
+                  <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Score Breakdown</h3>
                   {[
                     { label: 'Technical', score: scores.technical, weight: '40%', color: '#a78bfa' },
                     { label: 'Problem Solving', score: scores.problemSolving, weight: '25%', color: '#22d3ee' },
@@ -1016,7 +1016,7 @@ Estimated time complexity: ${complexity}`);
                   ].map(({ label, score, weight, color }) => (
                     <div key={label} style={{ marginBottom: 18 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: '0.88rem' }}>
-                        <span style={{ color: 'white', fontWeight: 600 }}>{label} <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({weight})</span></span>
+                        <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{label} <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({weight})</span></span>
                         <span style={{ fontWeight: 800, color }}>{score}%</span>
                       </div>
                       <div className="progress-bar">
@@ -1030,7 +1030,7 @@ Estimated time complexity: ${complexity}`);
                 <div style={{ padding: '20px 24px', borderRadius: 12, background: 'linear-gradient(135deg, rgba(34,211,238,0.1) 0%, rgba(124,58,237,0.1) 100%)', border: '1px solid rgba(124,58,237,0.25)', marginBottom: 32 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                     <TrendingUp size={20} color="#22d3ee" />
-                    <h3 style={{ fontWeight: 700, color: 'white', fontSize: '1.05rem', margin: 0 }}>Iterative Refactoring Tracking</h3>
+                    <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.05rem', margin: 0 }}>Iterative Refactoring Tracking</h3>
                   </div>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 16 }}>
                     Unlike generic scoring, we track how well you apply feedback in real-time. Your ability to optimize time/space complexity and resolve edge cases improved by <strong style={{ color: '#34d399' }}>+12%</strong> compared to your historical baseline!
@@ -1092,7 +1092,7 @@ Estimated time complexity: ${complexity}`);
                 </div>
 
                 <div style={{ marginTop: 40, textAlign: 'center' }}>
-                  <h3 style={{ fontSize: '1.5rem', color: 'white', fontWeight: 800, marginBottom: 12 }}>Arjun (AI HR Director)</h3>
+                  <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', fontWeight: 800, marginBottom: 12 }}>Arjun (AI HR Director)</h3>
                   <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 24 }}>
                     <span className="badge badge-purple" style={{ fontSize: '0.75rem' }}>Sentence Formation Tracking</span>
                     <span className="badge badge-blue" style={{ fontSize: '0.75rem' }}>Keyword Rubric Analysis</span>
@@ -1198,7 +1198,7 @@ Estimated time complexity: ${complexity}`);
 
 export default function InterviewSessionPage() {
   return (
-    <Suspense fallback={<div style={{ height: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>Loading interview session...</div>}>
+    <Suspense fallback={<div style={{ height: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)' }}>Loading interview session...</div>}>
       <InterviewSessionContent />
     </Suspense>
   );

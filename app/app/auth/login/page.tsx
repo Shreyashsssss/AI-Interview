@@ -96,10 +96,10 @@ export default function LoginPage() {
             <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Brain size={22} color="white" />
             </div>
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>Place<span className="gradient-text">AI</span></span>
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>Place<span className="gradient-text">AI</span></span>
           </div>
 
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Welcome back</h1>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Welcome back</h1>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 32, fontSize: '0.95rem' }}>Sign in to continue your placement journey</p>
 
           {/* Quick login buttons */}
@@ -155,12 +155,12 @@ export default function LoginPage() {
                           width: 32, height: 32, borderRadius: '50%',
                           background: `linear-gradient(135deg, ${expert.color}, ${expert.color}88)`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontWeight: 700, fontSize: '0.75rem', color: 'white', flexShrink: 0,
+                          fontWeight: 700, fontSize: '0.75rem', color: 'var(--text-primary)', flexShrink: 0,
                         }}>
                           {expert.name.split(' ').map(n => n[0]).join('')}
                         </div>
                         <div style={{ textAlign: 'left' }}>
-                          <div style={{ color: 'white', fontSize: '0.85rem', fontWeight: 600 }}>{expert.name}</div>
+                          <div style={{ color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 600 }}>{expert.name}</div>
                           <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{expert.company} &middot; {expert.email}</div>
                         </div>
                       </button>

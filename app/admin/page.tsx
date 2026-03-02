@@ -70,7 +70,7 @@ export default function AdminPage() {
       <main className="main-content" style={{ padding: '32px 36px', overflowY: 'auto' }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Platform Analytics</h1>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>Platform Analytics</h1>
           <p style={{ color: 'var(--text-secondary)' }}>Real-time overview of the PlaceAI platform. Last updated: Feb 26, 2026</p>
         </div>
 
@@ -86,7 +86,7 @@ export default function AdminPage() {
               <div className="stat-box-icon" style={{ background: bg, border: `1px solid ${color}30` }}>
                 <Icon size={20} color={color} />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'white', lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{value}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6 }}>{label}</div>
               <div style={{ fontSize: '0.75rem', color: '#34d399', marginTop: 4, fontWeight: 600 }}>{change}</div>
             </div>
@@ -97,7 +97,7 @@ export default function AdminPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24, marginBottom: 24 }}>
           {/* User growth */}
           <div className="card-no-hover" style={{ padding: 24 }}>
-            <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>📈 User Growth (Last 7 Months)</h3>
+            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>📈 User Growth (Last 7 Months)</h3>
             <ResponsiveContainer width="100%" height={240}>
               <AreaChart data={SIGNUP_DATA}>
                 <defs>
@@ -123,7 +123,7 @@ export default function AdminPage() {
 
           {/* Placement rate pie */}
           <div className="card-no-hover" style={{ padding: 24 }}>
-            <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>🎯 Placement Status</h3>
+            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>🎯 Placement Status</h3>
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie data={PLACEMENT_RATE} innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value">
@@ -150,7 +150,7 @@ export default function AdminPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 24 }}>
           {/* Daily interviews */}
           <div className="card-no-hover" style={{ padding: 24 }}>
-            <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>🤖 Interview Sessions (This Week)</h3>
+            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>🤖 Interview Sessions (This Week)</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={INTERVIEW_DATA} barGap={4}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e1e3a" />
@@ -166,7 +166,7 @@ export default function AdminPage() {
 
           {/* Top roles */}
           <div className="card-no-hover" style={{ padding: 24 }}>
-            <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>💼 Most Practiced Job Roles</h3>
+            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>💼 Most Practiced Job Roles</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {TOP_ROLES.map(({ role, count }, i) => {
                 const pct = Math.round((count / TOP_ROLES[0].count) * 100);
@@ -174,7 +174,7 @@ export default function AdminPage() {
                 return (
                   <div key={role}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: '0.82rem' }}>
-                      <span style={{ color: 'white', fontWeight: 500 }}>#{i + 1} {role}</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>#{i + 1} {role}</span>
                       <span style={{ color: colors[i], fontWeight: 700 }}>{count.toLocaleString()}</span>
                     </div>
                     <div className="progress-bar" style={{ height: 6 }}>
@@ -189,7 +189,7 @@ export default function AdminPage() {
 
         {/* Platform health */}
         <div className="card-no-hover" style={{ padding: 24 }}>
-          <h3 style={{ fontWeight: 700, color: 'white', marginBottom: 20, fontSize: '0.95rem' }}>⚡ System Health</h3>
+          <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, fontSize: '0.95rem' }}>⚡ System Health</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
             {[
               { label: 'API Uptime', value: '99.98%', icon: Activity, color: '#34d399' },
